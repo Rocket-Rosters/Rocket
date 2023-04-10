@@ -135,7 +135,6 @@
 //     </section>
 //   );
 // }
-
 import { useState, ReactNode, useEffect } from 'react';
 import Link from 'next/link';
 import { GetServerSidePropsContext } from 'next';
@@ -143,12 +142,9 @@ import {
   createServerSupabaseClient,
   User
 } from '@supabase/auth-helpers-nextjs';
-
 import LoadingDots from '@/components/ui/LoadingDots';
 import Button from '@/components/ui/Button';
 import { useUser } from '@/utils/useUser';
-import { useprofile } from '@/utils/useprofile';
-
 import { postData } from '@/utils/helpers';
 import { supabase } from '@/utils/supabase-client';
 import { json } from 'stream/consumers';
@@ -196,10 +192,43 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     }
   };
 };
-// gets user data from databas OF PROFILE TABLE
+
 export default function Account({ user }: { user: User }) {
-  const [details, setDetails] = useState<any>([]);
-  const getUserDetails = () => supabase.from('profiles').select('*').single();
+  const [details, setDetails] = useState<any>({
+    // id uuid not null,
+    // email text not null,
+    // username text null,
+    // first_name text null,
+    // last_name text null,
+    // full_name text null,
+    // avatar_url text null,
+    // website text null,
+    // role text not null default 'user'::text,
+    // address_line1 text null,
+    // address_line2 text null,
+    // city text null,
+    // state text null,
+    // postal_code text null,
+    // country text null,
+    id: user.id,
+    email: user.email,
+    username: '',
+    first_name: '',
+    last_name: '',
+    full_name: '',
+    avatar_url: '',
+    website: '',
+    role: 'user',
+    address_line1: '',
+    address_line2: '',
+    city: '',
+    state: '',
+    postal_code: '',
+    country: ''
+  });
+  const getUserDetails = () =>
+    supabase.from('profiles').select('*').eq('id', user.id).single();
+
   useEffect(() => {
     getUserDetails().then(({ data }) => {
       setDetails(data);
@@ -210,20 +239,19 @@ export default function Account({ user }: { user: User }) {
   const handleUpdate = async () => {
     console.log('Previous details:', details);
     console.log('User ID:', user.id);
-  
+
     const { data: updatedProfile, error } = await supabase
       .from('profiles')
       .update(details)
       .eq('id', user.id)
       .single();
-  
+
     if (error) {
       console.log(error);
     } else {
       console.log('Updated details:', updatedProfile);
     }
   };
-  
 
   return (
     <section className="bg-black mb-32">
@@ -253,25 +281,28 @@ export default function Account({ user }: { user: User }) {
           description="Please enter the username you want to use to login."
           footer={<p>We will email you to verify the change.</p>}
         >
-          {Object.entries(details).map(([key, value]) => (
-            <div key={key} className="flex flex-col mt-4">
-              <label htmlFor={key} className="mb-2 font-medium">
-                {key}
-              </label>
-              <input
-                id={key}
-                type="text"
-                // @ts-ignore
-                value={value ?? ''}
-                onChange={(event) => {
-                  const newDetails = { ...details };
-                  newDetails[key] = event.target.value;
-                  setDetails(newDetails);
-                }}
-                className="bg-black text-white border border-white rounded-md py-2 px-3 mb-2"
-              />
-            </div>
-          ))}
+          {Object.entries(details).map(([key, value]) => {
+            if (key === 'id'  || key === "email" || key === "full_name" || key==="avatar_url") return <></>;
+            return (
+              <div key={key} className="flex flex-col mt-4">
+                <label htmlFor={key} className="mb-2 font-medium">
+                  {key}
+                </label>
+                <input
+                  id={key}
+                  type="text"
+                  // @ts-ignore
+                  value={value ?? ''}
+                  onChange={(event) => {
+                    const newDetails = { ...details };
+                    newDetails[key] = event.target.value;
+                    setDetails(newDetails);
+                  }}
+                  className="bg-black text-white border border-white rounded-md py-2 px-3 mb-2"
+                />
+              </div>
+            );
+          })}
           <button
             onClick={() => {
               handleUpdate();

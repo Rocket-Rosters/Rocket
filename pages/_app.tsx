@@ -11,6 +11,7 @@ import type { Database } from 'types_db';
 import 'styles/main.css';
 import 'styles/chrome-bug.css';
 import { MyProfileContextProvider } from '@/utils/useProfiles';
+import { Context, Provider } from '@/lib/providers/provider';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const [supabaseClient] = useState(() =>
@@ -22,15 +23,17 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <div className="bg-black">
-      <SessionContextProvider supabaseClient={supabaseClient}>
-        <MyUserContextProvider>
-        <MyProfileContextProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-          </MyProfileContextProvider>
-        </MyUserContextProvider>
-      </SessionContextProvider>
+      <Provider>
+        <SessionContextProvider supabaseClient={supabaseClient}>
+          <MyUserContextProvider>
+          <MyProfileContextProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+            </MyProfileContextProvider>
+          </MyUserContextProvider>
+        </SessionContextProvider>
+      </Provider>
     </div>
   );
 }
