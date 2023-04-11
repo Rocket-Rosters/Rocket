@@ -72,6 +72,18 @@ export default function InviteStudentsPage() {
           if (error) {
             console.error(error);
           }
+          // take the email and grab the user id from the database
+          // then add the user id to the course_users table
+          const { data, error:any  } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('email', email)
+            .single();
+          if (error) {
+            console.error(error);
+          }
+          console.log(data);
+
         }
       }
     };
