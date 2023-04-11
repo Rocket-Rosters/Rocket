@@ -1,126 +1,131 @@
-import { ReactNode, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import React from 'react';
 import * as XLSX from 'xlsx';
+import { supabase } from '@/utils/supabase-client';
 
-interface Props {
-  title: string;
-  description?: string;
-  footer?: ReactNode;
-  children: ReactNode;
+interface UserData {
+  username?: string | null;
+  first_name?: string | null;
+  last_name?: string | null;
+  full_name?: string | null;
+  avatar_url?: string | null;
+  website?: string | null;
+  role?: string;
+  address_line1?: string | null;
+  address_line2?: string | null;
+  city?: string | null;
+  state?: string | null;
+  postal_code?: string | null;
+  country?: string | null;
 }
 
-function Card({ title, description, footer, children }: Props) {
-  return (
-    <div className="border border-zinc-700	max-w-3xl w-full p rounded-md m-auto my-8">
-      <div className="px-5 py-4">
-        <h3 className="text-2xl mb-1 font-medium">{title}</h3>
-        <p className="text-zinc-300">{description}</p>
-        {children}
-      </div>
-      <div className="border-t border-zinc-700 bg-zinc-900 p-4 text-zinc-500 rounded-b-md">
-        {footer}
-      </div>
-    </div>
-  );
-}
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-//@ts-ignore
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-export default function InviteStudentsPage() {
-  const [file, setFile] = useState<File | null>(null);
-  // const [invitedCount, setInvitedCount] = useState<number | null>(null);
+const ImportUsers: React.FC = () => {
+  const [file, setFile] = React.useState<File | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      setFile(file);
-    }
+    // @ts-ignore
+    setFile(file);
   };
 
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  
+
     if (!file) {
       return;
     }
-  
+
     const reader = new FileReader();
+
     reader.onload = async (event) => {
       const data = event.target?.result;
+
       if (typeof data === 'string') {
         const workbook = XLSX.read(data, { type: 'binary' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const rows = XLSX.utils.sheet_to_json(worksheet);
-  
+
         const emailColumn = 'email'; // Replace with the name of the column that contains the email addresses
         const emails = rows
           .map((row: any) => row[emailColumn])
           .filter((email: any) => email);
-  
+
         console.log(emails);
-  
+
+        // dictionary of emails and ids
+        const ids: any = [];
+
         for (const email of emails) {
           // @ts-ignore
           const { error } = await supabase.auth.signUp({
             email,
-            password: 'password'
+            password: 'password',
           });
-  
+
           if (error) {
             console.error(error);
           }
+
           // take the email and grab the user id from the database
           // then add the user id to the course_users table
-          const { data, error:any  } = await supabase
+          const { data, error: profileError } = await supabase
             .from('profiles')
             .select('id')
             .eq('email', email)
             .single();
+
+          if (profileError) {
+            console.error(profileError);
+          }
+
+          if (data) {
+            ids.push({ email: email, id: data.id });
+          }
+        }
+
+        // for each email in the dictionary use the ID and edit the profile table
+        // and use the email to get all the data to edit the profile table from the json file
+        for (const id of ids) {
+          // read the JSON data for the user
+          // @ts-ignore
+          const userData: UserData = rows.find((row: any) => row[emailColumn] === id.email);
+
+          const { data, error } = await supabase
+            .from('profiles')
+            .update({
+              username: userData.username || null,
+              first_name: userData.first_name || null,
+              last_name: userData.last_name || null,
+              full_name: userData.full_name || null,
+              avatar_url: userData.avatar_url || null,
+              website: userData.website || null,
+              role: userData.role || 'user',
+              address_line1: userData.address_line1 || null,
+              address_line2: userData.address_line2 || null,
+              city: userData.city || null,
+              state: userData.state || null,
+              postal_code: userData.postal_code || null,
+              country: userData.country || null
+            })
+            .eq('id', id.id);
+
           if (error) {
             console.error(error);
           }
-          console.log(data);
 
+          console.log(data);
         }
       }
     };
+
     reader.readAsBinaryString(file);
   };
 
   return (
-    <div className="p-4 flex justify-center items-center">
-      <Card
-        title="Invite Students"
-        description="Invite students to your course by uploading a spreadsheet with their email addresses."
-      >
-        <form className="flex flex-col space-y-4">
-          <div className="flex flex-col space-y-2">
-            <label className="text-sm font-medium text-gray-700" htmlFor="file">
-              Select a file
-            </label>
-            <div className="flex items-center space-x-2">
-              <input
-                type="file"
-                accept=".xlsx"
-                onChange={handleFileChange}
-                className="border border-gray-300 rounded-lg px-3 py-2 w-60"
-              />
-            </div>
-          </div>
-        </form>
-        
-        {/* make a button that trigers handleFormSubmit */}
-        <button 
-          type="submit"
-          className="bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-lg px-4 py-2 text-sm font-medium text-white"
-          onClick={handleFormSubmit}
-        >
-          Send Invite
-        </button>
-      </Card>
-    </div>
+    <form onSubmit={handleFormSubmit}>
+      <input type="file" accept=".xlsx" onChange={handleFileChange} />
+      <button type="submit">Submit</button>
+    </form>
   );
-}
+};
+
+export default ImportUsers; 
