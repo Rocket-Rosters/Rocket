@@ -23,7 +23,8 @@
     "react-merge-refs": "^2.0.1",
     "stripe": "^11.13.0",
     "swr": "^2.0.4",
-    "tailwindcss": "^3.2.7"
+    "tailwindcss": "^3.2.7",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",

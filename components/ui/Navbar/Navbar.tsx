@@ -32,6 +32,18 @@ const Navbar = () => {
               </Link>
             </nav>
           </div>
+          {/* @ts-ignore */}
+          <div className="flex flex-1 justify-center items-center">
+            {console.log('hey')}
+            {console.log(user)}
+            {console.log(user?.role)}
+
+            {user?.role === 'authenticated' ? (
+              <Link href="/admin" className={s.link}>
+                Admin
+              </Link>
+            ) : null}
+          </div>
 
           <div className="flex flex-1 justify-end space-x-8">
             {user ? (
