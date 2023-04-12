@@ -1,6 +1,6 @@
 import { GetStaticPropsResult } from 'next';
 
-import Welcome from '@/components/welcome';
+import Welcome from '@/components/Welcome';
 
 
 

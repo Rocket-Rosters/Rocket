@@ -1,4 +1,4 @@
-import Pricing from '@/components/welcome';
+import Pricing from '@/components/Welcome';
 
 interface Props {
   products: any;

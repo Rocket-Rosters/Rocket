@@ -1,25 +1,25 @@
-
 export default function Welcome() {
-    
-  
-    return (
-      <section className="bg-black">
-        <div className="max-w-6xl mx-auto py-8 sm:py-24 px-4 sm:px-6 lg:px-8">
-          <div className="sm:flex sm:flex-col sm:align-center"></div>
-          <p className="text-6xl font-extrabold text-white sm:text-center sm:text-6xl">
-            No subscription pricing plans found. Create them in your{' '}
-            <a
-              className="text-pink-500 underline"
-              href="https://dashboard.stripe.com/products"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Stripe Dashboard
-            </a>
-            .
-          </p>
+
+  return (
+    <section className="bg-purple-50">
+      <div className="max-w-6xl mx-auto py-8 sm:py-24 px-4 sm:px-6 lg:px-8">
+        <div className="sm:flex sm:flex-col sm:align-right">
+          <h1 className="text-4xl font-extrabold text-purple-800 sm:text-5xl mb-2">Welcome to Rocket Rosters!</h1>
+          <p className="text-xl text-purple-600 sm:text-2xl mb-4">We're excited to have you onboard.</p>
+          <iframe src="https://embed.lottiefiles.com/animation/94719" className="align-right"></iframe>
         </div>
-      </section>
-    );
+        <p className="text-lg font-bold text-purple-800 sm:text-xl sm:text-center sm:mt-12">
+          Sorry, we couldn't find any subscription pricing plans for you just yet.
+          <br />
+          Please check back soon, and we'll have them ready for you!
+        </p>
+        <p className="text-lg text-purple-600 sm:text-xl sm:text-center mt-8">
+          In the meantime, feel free to explore our programs and resources.
+        </p>
+      </div>
+    </section>
+  );
 
 }
+
+

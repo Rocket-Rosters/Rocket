@@ -10,15 +10,16 @@ export default function Footer() {
     <footer className="mx-auto max-w-[1920px] px-6 bg-zinc-900">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 border-b border-zinc-600 py-12 text-white transition-colors duration-150 bg-zinc-900">
         <div className="col-span-1 lg:col-span-2">
-          <Link
+          {/* <Link
             href="/"
             className="flex flex-initial items-center font-bold md:mr-24"
-          >
-            <span className="rounded-full border border-zinc-700 mr-2">
+          > */}
+            {/* <span className="rounded-full border border-zinc-700 mr-2"> */}
               <Logo />
-            </span>
-            <span>ACME</span>
-          </Link>
+              {/* <img src="/RocketTransparent.png" alt="Logo" width="300px" height="200px"/> */}
+            {/* </span> */}
+            {/* <span>Rocket Rosters</span> */}
+          {/* </Link> */}
         </div>
         <div className="col-span-1 lg:col-span-2">
           <ul className="flex flex-initial flex-col md:flex-1">
@@ -94,17 +95,17 @@ export default function Footer() {
       </div>
       <div className="py-12 flex flex-col md:flex-row justify-between items-center space-y-4 bg-zinc-900">
         <div>
-          <span>&copy; 2020 ACME, Inc. All rights reserved.</span>
+          <span>&copy; 2023 Rocket Rosters, Inc. All rights reserved.</span>
         </div>
         <div className="flex items-center">
-          <span className="text-white">Crafted by</span>
+          {/* <span className="text-white">Crafted by</span>
           <a href="https://vercel.com" aria-label="Vercel.com Link">
             <img
               src="/vercel.svg"
               alt="Vercel.com Logo"
               className="inline-block h-6 ml-4 text-white"
             />
-          </a>
+          </a> */}
         </div>
       </div>
     </footer>
