@@ -168,6 +168,7 @@ import { useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/utils/supabase-client';
 import { v4 as uuidv4 } from 'uuid';
 import Button from '@/components/ui/Button';
+import PageWrapper from "@/lib/pageWrapper";
 // import { Card } from './Card';
 
 interface Props {
@@ -191,36 +192,6 @@ function Card({ title, description, footer, children }: Props) {
     </div>
   );
 }
-
-// function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
-//   return (
-//     <table style={{ margin: 'auto', border: '2px solid purple' }}>
-//       <thead>
-//         <tr>
-//           <th>Name</th>
-//           <th>Start date</th>
-//           <th>End date</th>
-//           <th>Actions</th>
-//         </tr>
-//       </thead>
-//       <tbody>
-//         {courses.map((course: any) => (
-//           <tr key={course.id}>
-//             <td>{course.name}</td>
-//             <td>{course.start_date}</td>
-//             <td>{course.end_date}</td>
-//             <td>
-//               <button onClick={() => handleUpdate(course.id, 'New name', course.start_date, course.end_date)}>
-//                 Update
-//               </button>
-//               <button onClick={() => handleDelete(course.id)}>Delete</button>
-//             </td>
-//           </tr>
-//         ))}
-//       </tbody>
-//     </table>
-//   );
-// }
 
 function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
   return (
@@ -327,6 +298,8 @@ const CoursesPage = () => {
   };
 
   return (
+    <PageWrapper allowedRoles={["admin"]}>
+            <>
     <div>
     <Card title="Create Course" description="Enter new course information">
       {/* <h1 style={{ color: 'purple', marginBottom: '20px' }}>Make New Course</h1> */}
@@ -356,45 +329,9 @@ const CoursesPage = () => {
     </Card> 
     <Card title="Courses" description="List of all courses"> <CoursesTable courses={courses} handleUpdate={handleUpdate} handleDelete={handleDelete} /> </Card>
     </div>
+    </>
+        </PageWrapper>
        ); };
 
   export default CoursesPage;
 
-  // <div>
-    //   <h1 style={{ color: 'white' }}>Make New Course</h1>
-    //   <form onSubmit={handleCreate}>
-    //     <label htmlFor="name" style={{ color: 'white' }}>
-    //       Name:
-    //     </label>
-    //     <input
-    //       type="text"
-    //       id="name"
-    //       value={name}
-    //       onChange={(event) => setName(event.target.value)}
-    //       style={{ color: 'inherit' }}
-    //     />
-
-    //     <label htmlFor="startDate" style={{ color: 'white' }}>
-    //       Start date:
-    //     </label>
-    //     <input
-    //       type="date"
-    //       id="startDate"
-    //       value={startDate}
-    //       onChange={(event) => setStartDate(event.target.value)}
-    //       style={{ color: 'inherit' }}
-    //     />
-
-    //     <label htmlFor="endDate" style={{ color: 'white' }}>
-    //       End date:
-    //     </label>
-    //     <input
-    //       type="date"
-    //       id="endDate"
-    //       value={endDate}
-    //       onChange={(event) => setEndDate(event.target.value)}
-    //       style={{ color: 'inherit' }}
-    //     />
-
-    //     <button type="submit">Create course</button>
-    //   </form>
