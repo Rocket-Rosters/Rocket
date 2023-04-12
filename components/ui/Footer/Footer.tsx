@@ -9,13 +9,14 @@ export default function Footer() {
   return (
     <footer className="mx-auto max-w-[1920px] px-6 bg-zinc-900">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 border-b border-zinc-600 py-12 text-white transition-colors duration-150 bg-zinc-900">
-        <div className="col-span-1 lg:col-span-2">
+        <div className="col-span-2 lg:col-span-2">
           {/* <Link
             href="/"
             className="flex flex-initial items-center font-bold md:mr-24"
           > */}
             {/* <span className="rounded-full border border-zinc-700 mr-2"> */}
-              <Logo />
+              {/* <Logo /> */}
+              <img src="/IMG_2682-removebg.png" alt="Logo" width="130px"/>
               {/* <img src="/RocketTransparent.png" alt="Logo" width="300px" height="200px"/> */}
             {/* </span> */}
             {/* <span>Rocket Rosters</span> */}
