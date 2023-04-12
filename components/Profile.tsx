@@ -3,8 +3,6 @@
 // import { createClient } from '@supabase/supabase-js';
 // import { supabase } from '@supabase/auth-ui-shared';
 
-
-
 // type ProfileData = {
 //   id: number;
 //   user_id: string;
@@ -96,17 +94,19 @@ import { createClient } from '@supabase/supabase-js';
 import { supabase } from '@supabase/auth-ui-shared';
 
 type ProfileData = {
-  id: number,
-  email: string,
-  username: string,
-  full_name: string,
-  avatar_url: string,
-  role: 'user',
+  id: number;
+  email: string;
+  username: string;
+  full_name: string;
+  avatar_url: string;
+  role: 'user';
 };
 
 export default function Profile() {
   const router = useRouter();
-  const [profileData, setProfileData] = useState<ProfileData | undefined>(undefined);
+  const [profileData, setProfileData] = useState<ProfileData | undefined>(
+    undefined
+  );
   const [newName, setNewName] = useState('');
   const [newBio, setNewBio] = useState('');
 
@@ -139,10 +139,10 @@ export default function Profile() {
       if (user && profileData) {
         const { error } = await supabase
           .from<ProfileData>('profiles')
-          .update({ full_name: newName})
+          .update({ full_name: newName })
           .eq('user_id', user.id);
         if (!error) {
-          setProfileData({ ...profileData, full_name: newName});
+          setProfileData({ ...profileData, full_name: newName });
         }
       }
     } catch (error) {

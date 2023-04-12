@@ -41,7 +41,7 @@ function Card({ title, description, footer, children }: Props) {
   );
 }
 
-// Auth middleware for role based access control
+// Define an asynchronous function that is used to fetch data from a server for a Next.js application.
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   // Get the Supabase client from the `createServerSupabaseClient` function.
   const supabase = createServerSupabaseClient(ctx);
@@ -70,10 +70,10 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
 export default function AdminPage() {
   return (
-    <PageWrapper allowedRoles={['admin']}>
+    <PageWrapper allowedRoles={['student']}>
       <>
         <Card title="Admin Page">
-          <p>Admin Page</p>
+          <p>My Courses</p>
         </Card>
       </>
     </PageWrapper>

@@ -16,7 +16,13 @@ const Logo = ({ className = '', ...props }) => (
   //     fill="black"
   //   />
   // </svg>
-  <img src="/RocketTransparent.png" alt="Logo" className={className} {...props} width="150px"/>
+  <img
+    src="/RocketTransparent.png"
+    alt="Logo"
+    className={className}
+    {...props}
+    width="150px"
+  />
 );
 
 export default Logo;

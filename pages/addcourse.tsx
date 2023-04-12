@@ -108,7 +108,7 @@
 //           onChange={(event) => setName(event.target.value)}
 //           style={{ color: 'inherit' }}
 //         />
-  
+
 //         <label htmlFor="startDate" style={{ color: 'black' }}>Start date:</label>
 //         <input
 //           type="date"
@@ -117,7 +117,7 @@
 //           onChange={(event) => setStartDate(event.target.value)}
 //           style={{ color: 'inherit' }}
 //         />
-  
+
 //         <label htmlFor="endDate" style={{ color: 'black' }}>End date:</label>
 //         <input
 //           type="date"
@@ -126,10 +126,10 @@
 //           onChange={(event) => setEndDate(event.target.value)}
 //           style={{ color: 'inherit' }}
 //         />
-  
+
 //         <button type="submit">Create course</button>
 //       </form>
-  
+
 //       <table>
 //         <thead>
 //           <tr>
@@ -139,7 +139,7 @@
 //             <th>Actions</th>
 //           </tr>
 //         </thead>
-  
+
 //         <tbody>
 //           {courses.map((course) => (
 //             <tr key={course.id}>
@@ -158,17 +158,16 @@
 //       </table>
 //     </div>
 //   );
-  
+
 // };
 
 // export default CoursesPage;
-
 
 import { useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/utils/supabase-client';
 import { v4 as uuidv4 } from 'uuid';
 import Button from '@/components/ui/Button';
-import PageWrapper from "@/lib/pageWrapper";
+import PageWrapper from '@/lib/pageWrapper';
 // import { Card } from './Card';
 
 interface Props {
@@ -195,26 +194,89 @@ function Card({ title, description, footer, children }: Props) {
 
 function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
   return (
-    <table style={{ margin: 'auto', borderCollapse: 'collapse', border: '2px solid black', backgroundColor: '#E6E6FA', color: 'black' }}>
+    <table
+      style={{
+        margin: 'auto',
+        borderCollapse: 'collapse',
+        border: '2px solid black',
+        backgroundColor: '#E6E6FA',
+        color: 'black'
+      }}
+    >
       <thead>
         <tr>
-          <th style={{ border: '1px solid purple', padding: '10px', backgroundColor: '#9370DB', color: 'white' }}>Name</th>
-          <th style={{ border: '1px solid purple', padding: '10px', backgroundColor: '#9370DB', color: 'white' }}>Start date</th>
-          <th style={{ border: '1px solid purple', padding: '10px', backgroundColor: '#9370DB', color: 'white' }}>End date</th>
-          <th style={{ border: '1px solid purple', padding: '10px', backgroundColor: '#9370DB', color: 'white' }}>Actions</th>
+          <th
+            style={{
+              border: '1px solid purple',
+              padding: '10px',
+              backgroundColor: '#9370DB',
+              color: 'white'
+            }}
+          >
+            Name
+          </th>
+          <th
+            style={{
+              border: '1px solid purple',
+              padding: '10px',
+              backgroundColor: '#9370DB',
+              color: 'white'
+            }}
+          >
+            Start date
+          </th>
+          <th
+            style={{
+              border: '1px solid purple',
+              padding: '10px',
+              backgroundColor: '#9370DB',
+              color: 'white'
+            }}
+          >
+            End date
+          </th>
+          <th
+            style={{
+              border: '1px solid purple',
+              padding: '10px',
+              backgroundColor: '#9370DB',
+              color: 'white'
+            }}
+          >
+            Actions
+          </th>
         </tr>
       </thead>
       <tbody>
         {courses.map((course: any) => (
           <tr key={course.id}>
-            <td style={{ border: '1px solid purple', padding: '10px' }}>{course.name}</td>
-            <td style={{ border: '1px solid purple', padding: '10px' }}>{course.start_date}</td>
-            <td style={{ border: '1px solid purple', padding: '10px' }}>{course.end_date}</td>
             <td style={{ border: '1px solid purple', padding: '10px' }}>
-              <Button style={{ padding: '5px', marginRight: '5px' }} onClick={() => handleUpdate(course.id, 'New name', course.start_date, course.end_date)}>
+              {course.name}
+            </td>
+            <td style={{ border: '1px solid purple', padding: '10px' }}>
+              {course.start_date}
+            </td>
+            <td style={{ border: '1px solid purple', padding: '10px' }}>
+              {course.end_date}
+            </td>
+            <td style={{ border: '1px solid purple', padding: '10px' }}>
+              <Button
+                style={{ padding: '5px', marginRight: '5px' }}
+                onClick={() =>
+                  handleUpdate(
+                    course.id,
+                    'New name',
+                    course.start_date,
+                    course.end_date
+                  )
+                }
+              >
                 Update
               </Button>
-              <Button style={{ padding: '5px' }} onClick={() => handleDelete(course.id)}>
+              <Button
+                style={{ padding: '5px' }}
+                onClick={() => handleDelete(course.id)}
+              >
                 Delete
               </Button>
             </td>
@@ -254,7 +316,7 @@ const CoursesPage = () => {
       id,
       name,
       start_date: startDate,
-      end_date: endDate,
+      end_date: endDate
     });
 
     if (error) {
@@ -268,7 +330,12 @@ const CoursesPage = () => {
     }
   };
 
-  const handleUpdate = async (id: any, name: string, startDate: any, endDate: any) => {
+  const handleUpdate = async (
+    id: any,
+    name: string,
+    startDate: any,
+    endDate: any
+  ) => {
     const { data, error } = await supabase
       .from('courses')
       .update({ name, start_date: startDate, end_date: endDate })
@@ -279,14 +346,19 @@ const CoursesPage = () => {
     } else {
       console.log('Course updated:', data);
       const updatedCourses = courses.map((course: any) =>
-        course.id === id ? { ...course, name, start_date: startDate, end_date: endDate } : course
+        course.id === id
+          ? { ...course, name, start_date: startDate, end_date: endDate }
+          : course
       );
       setCourses(updatedCourses);
     }
   };
 
   const handleDelete = async (id: any) => {
-    const { data, error } = await supabase.from('courses').delete().eq('id', id);
+    const { data, error } = await supabase
+      .from('courses')
+      .delete()
+      .eq('id', id);
 
     if (error) {
       console.error(error);
@@ -298,40 +370,95 @@ const CoursesPage = () => {
   };
 
   return (
-    <PageWrapper allowedRoles={["admin"]}>
-            <>
-    <div>
-    <Card title="Create Course" description="Enter new course information">
-      {/* <h1 style={{ color: 'purple', marginBottom: '20px' }}>Make New Course</h1> */}
-      <form onSubmit={handleCreate}>
-        <div style={{ marginBottom: '10px' }}>
-          <label htmlFor="name" style={{ color: '#9370DB', marginRight: '10px' }}>
-            Name:
-          </label>
-          <input type="text" id="name" value={name} onChange={(event) => setName(event.target.value)} style={{ color: 'black', padding: '5px', borderRadius: '5px', border: '1px solid white' }} />
+    <PageWrapper allowedRoles={['admin']}>
+      <>
+        <div>
+          <Card
+            title="Create Course"
+            description="Enter new course information"
+          >
+            {/* <h1 style={{ color: 'purple', marginBottom: '20px' }}>Make New Course</h1> */}
+            <form onSubmit={handleCreate}>
+              <div style={{ marginBottom: '10px' }}>
+                <label
+                  htmlFor="name"
+                  style={{ color: '#9370DB', marginRight: '10px' }}
+                >
+                  Name:
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                  style={{
+                    color: 'black',
+                    padding: '5px',
+                    borderRadius: '5px',
+                    border: '1px solid white'
+                  }}
+                />
+              </div>
+              <div style={{ marginBottom: '10px' }}>
+                <label
+                  htmlFor="startDate"
+                  style={{ color: '#9370DB', marginRight: '10px' }}
+                >
+                  Start date:
+                </label>
+                <input
+                  type="date"
+                  id="startDate"
+                  value={startDate}
+                  onChange={(event) => setStartDate(event.target.value)}
+                  style={{
+                    color: 'black',
+                    padding: '5px',
+                    borderRadius: '5px',
+                    border: '1px solid white'
+                  }}
+                />
+              </div>
+              <div style={{ marginBottom: '10px' }}>
+                <label
+                  htmlFor="endDate"
+                  style={{ color: '#9370DB', marginRight: '10px' }}
+                >
+                  End date:
+                </label>
+                <input
+                  type="date"
+                  id="endDate"
+                  value={endDate}
+                  onChange={(event) => setEndDate(event.target.value)}
+                  style={{
+                    color: 'black',
+                    padding: '5px',
+                    borderRadius: '5px',
+                    border: '1px solid white'
+                  }}
+                />
+              </div>
+              <Button
+                type="submit"
+                style={{ padding: '10px', borderRadius: '5px', border: 'none' }}
+              >
+                Create course
+              </Button>
+            </form>
+          </Card>
+          <Card title="Courses" description="List of all courses">
+            {' '}
+            <CoursesTable
+              courses={courses}
+              handleUpdate={handleUpdate}
+              handleDelete={handleDelete}
+            />{' '}
+          </Card>
         </div>
-        <div style={{ marginBottom: '10px' }}>
-          <label htmlFor="startDate" style={{ color: '#9370DB', marginRight: '10px' }}>
-            Start date:
-          </label>
-          <input type="date" id="startDate" value={startDate} onChange={(event) => setStartDate(event.target.value)} style={{ color: 'black', padding: '5px', borderRadius: '5px', border: '1px solid white' }} />
-        </div>
-        <div style={{ marginBottom: '10px' }}>
-          <label htmlFor="endDate" style={{ color: '#9370DB', marginRight: '10px' }}>
-            End date:
-          </label>
-          <input type="date" id="endDate" value={endDate} onChange={(event) => setEndDate(event.target.value)} style={{ color: 'black', padding: '5px', borderRadius: '5px', border: '1px solid white' }} />
-        </div>
-        <Button type="submit" style={{  padding: '10px', borderRadius: '5px', border: 'none' }}>
-          Create course
-        </Button>
-      </form>
-    </Card> 
-    <Card title="Courses" description="List of all courses"> <CoursesTable courses={courses} handleUpdate={handleUpdate} handleDelete={handleDelete} /> </Card>
-    </div>
-    </>
-        </PageWrapper>
-       ); };
+      </>
+    </PageWrapper>
+  );
+};
 
-  export default CoursesPage;
-
+export default CoursesPage;

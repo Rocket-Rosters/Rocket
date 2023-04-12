@@ -1,7 +1,8 @@
+// supabase.storage.from('pdfs').upload(fileName, file);
+
 import { ReactNode, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import * as XLSX from 'xlsx';
-
+import { useUser } from '@/utils/useUser';
 interface Props {
   title: string;
   description?: string;
@@ -40,6 +41,7 @@ export default function InviteStudentsPage() {
     }
   };
 
+  const { user } = useUser();
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -50,62 +52,12 @@ export default function InviteStudentsPage() {
     const reader = new FileReader();
     reader.onload = async (event) => {
       const data = event.target?.result;
+      console.log(user);
       if (typeof data === 'string') {
-
-        const workbook = XLSX.read(data, { type: 'binary' });
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const rows: Object[] = XLSX.utils.sheet_to_json(worksheet);
-        // console.log(rows);
-
-        for (const row of rows) {
-          const { error } = await supabase.auth.signUp({
-            // @ts-ignore
-            email: row.email,
-            password: 'password'
-          });
-
-          if (error) {
-            console.error(error);
-          }
-
-          // update profile with role form the excel sheet thats on the same row
-          const { error: COOLERROR } = await supabase
-            .from('profiles')
-            .update({ 
-              // @ts-ignore
-              role: row.role,
-              // @ts-igno
-            first_name: row.first_name,
-            last_name: row.last_name,
-            full_name: row.full_name,
-            avatar_url: row.avatar_url,
-            website: row.website,
-            address_line1: row.address_line1,
-            address_line2: row.address_line2,
-            city: row.city,
-            state: row.state,
-            postal_code: row.postal_code,
-            country: row.country
-
-            })
-            // @ts-ignore
-            .eq('email', row.email);
-
-          const { data, error: COOLERERROR } = await supabase
-            .from('profiles')
-            // @ts-ignore
-            .select('*')
-            // @ts-ignore
-            .eq('email', row.email);
-
-          console.log('DATTATATA', data);
-          if (COOLERROR) {
-            console.error(COOLERROR);
-          }
-          if (COOLERERROR) {
-            console.error(COOLERERROR);
-          }
-        }
+        // @ts-ignore
+        supabase.storage.from('files').upload(user.id + ':' + file.name, file, {
+            contentType: 'application/pdf'
+        });
       }
     };
     reader.readAsBinaryString(file);
@@ -114,7 +66,7 @@ export default function InviteStudentsPage() {
   return (
     <div className="p-4 flex justify-center items-center">
       <Card
-        title="Invite Students"
+        title="add files "
         description="Invite students to your course by uploading a spreadsheet with their email addresses."
       >
         <form className="flex flex-col space-y-4">
@@ -126,7 +78,6 @@ export default function InviteStudentsPage() {
               <input
                 id="file"
                 type="file"
-                accept=".xlsx"
                 onChange={handleFileChange}
                 className="border border-gray-300 rounded-lg px-3 py-2 w-60"
               />
@@ -146,4 +97,7 @@ export default function InviteStudentsPage() {
       </Card>
     </div>
   );
+}
+function getUserDeatils() {
+  throw new Error('Function not implemented.');
 }
