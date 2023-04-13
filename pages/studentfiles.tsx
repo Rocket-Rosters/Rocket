@@ -56,7 +56,7 @@ export default function InviteStudentsPage() {
       if (typeof data === 'string') {
         // @ts-ignore
         supabase.storage.from('files').upload(user.id + ':' + file.name, file, {
-            contentType: 'application/pdf'
+          contentType: 'application/pdf'
         });
       }
     };

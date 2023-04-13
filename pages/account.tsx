@@ -247,7 +247,7 @@ export default function Account({ user }: { user: User }) {
 
     if (error) {
       console.log(error);
-    } 
+    }
   };
 
   return (

@@ -1,4 +1,5 @@
 import { useState, ReactNode, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { GetServerSidePropsContext } from 'next';
 import {
@@ -40,48 +41,65 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   };
 };
 
-export default function FacultyCourses(user: any) {
+export default function FacultyCourses() {
+  const router = useRouter();
+  const { user } = useUser();
+  console.log(user);
+  const [loading, setLoading] = useState(false);
   const [profileId, setProfileId] = useState('');
-  const [courses, setCourses] = useState([]);
+  const [courses, setCourses] = useState<any[]>([]);
 
-  const getCourses = async () => {
+  const getCourses = async (id: string) => {
     try {
       const { data: profile, error } = await supabase
         .from('profiles')
         .select('courses')
-        .eq('id', profileId)
+        .eq('id', id)
         .single();
 
       if (error) {
-        throw error;
+        console.log(error);
+      } else {
+        console.log({ profile });
+
+        const courseIds = profile?.courses;
+        console.log({ courseIds });
+        const { data: coursesData, error: coursesError } = await supabase
+          .from('courses')
+          .select('*')
+          .in('id', courseIds);
+
+        if (coursesError) {
+          console.log(coursesError);
+        }
+        if (coursesData) {
+          setCourses(coursesData);
+        }
       }
-
-      const courseIds = profile.courses;
-      const { data: coursesData, error: coursesError } = await supabase
-        .from('courses')
-        .select('*')
-        .in('id', courseIds);
-
-      if (coursesError) {
-        throw coursesError;
-      }
-
-      setCourses(coursesData);
     } catch (error) {
-      alert(error.message);
+      //@ts-expect-error
+      console.log(error.message);
     }
   };
 
   interface Props {
     title: string;
+    id: string;
     description?: string;
     footer?: ReactNode;
     children: ReactNode;
   }
 
-  function Card({ title, description, footer, children }: Props) {
+  function Card({ id, title, description, footer, children }: Props) {
+    function handleNavigate() {
+      router.push(`/course/${id}`);
+    }
     return (
-      <div className="border border-zinc-700	max-w-3xl w-full p rounded-md m-auto my-8">
+      <div
+        className="border border-zinc-700	max-w-3xl w-full p rounded-md m-auto my-8"
+        role="button"
+        onClick={() => handleNavigate()}
+      >
         <div className="px-5 py-4">
           <h3 className="text-2xl mb-1 font-medium">{title}</h3>
           <p className="text-zinc-300">{description}</p>
@@ -93,31 +111,46 @@ export default function FacultyCourses(user: any) {
       </div>
     );
   }
-
+  useEffect(() => {
+    setLoading(true);
+    if (user) {
+      setProfileId(user.id);
+      getCourses(user.id);
+    }
+    setLoading(false);
+  }, [user]);
+  if (loading) return <LoadingDots />;
   return (
     <PageWrapper allowedRoles={['faculty']}>
       <>
         <div>
           <h1>Faculty Courses</h1>
-          <label htmlFor="profileId">Profile ID:</label>
+          {/* <label htmlFor="profileId">Profile ID:</label>
           <input
             type="text"
             id="profileId"
             value={profileId}
             onChange={(e) => setProfileId(e.target.value)}
           />
-          <button onClick={getCourses}>Get Courses</button>
+          <button onClick={getCourses}>Get Courses</button> */}
         </div>
-        {courses.map((course: any) => (
-          <Card
-            key={course.id}
-            title={course.title}
-            description={course.description}
-            footer={course.footer}
-          >
-            {/* Render any additional course information here */}
-          </Card>
-        ))}
+        {courses.length === 0 ? (
+          <p>No courses found</p>
+        ) : (
+          <>
+            {courses.map((course: any) => (
+              <Card
+                key={course.id}
+                id={course.id}
+                title={course.title}
+                description={course.description}
+                footer={course.footer}
+              >
+                {/* Render any additional course information here */}
+              </Card>
+            ))}
+          </>
+        )}
       </>
     </PageWrapper>
   );

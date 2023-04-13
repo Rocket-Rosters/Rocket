@@ -51,7 +51,6 @@ export default function InviteStudentsPage() {
     reader.onload = async (event) => {
       const data = event.target?.result;
       if (typeof data === 'string') {
-
         const workbook = XLSX.read(data, { type: 'binary' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const rows: Object[] = XLSX.utils.sheet_to_json(worksheet);
@@ -71,22 +70,21 @@ export default function InviteStudentsPage() {
           // update profile with role form the excel sheet thats on the same row
           const { error: COOLERROR } = await supabase
             .from('profiles')
-            .update({ 
+            .update({
               // @ts-ignore
               role: row.role,
               // @ts-igno
-            first_name: row.first_name,
-            last_name: row.last_name,
-            full_name: row.full_name,
-            avatar_url: row.avatar_url,
-            website: row.website,
-            address_line1: row.address_line1,
-            address_line2: row.address_line2,
-            city: row.city,
-            state: row.state,
-            postal_code: row.postal_code,
-            country: row.country
-
+              first_name: row.first_name,
+              last_name: row.last_name,
+              full_name: row.full_name,
+              avatar_url: row.avatar_url,
+              website: row.website,
+              address_line1: row.address_line1,
+              address_line2: row.address_line2,
+              city: row.city,
+              state: row.state,
+              postal_code: row.postal_code,
+              country: row.country
             })
             // @ts-ignore
             .eq('email', row.email);
