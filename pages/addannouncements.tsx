@@ -1,3 +1,4 @@
+
 import { ReactNode, useState } from 'react';
 import { useUser } from '@/utils/useUser';
 import PageWrapper from '@/lib/pageWrapper';
@@ -68,10 +69,9 @@ export default function AnnouncementPage() {
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
-    const { data, error } = await supabase.from('announcements').insert({
+    const { data, error } = await supabase.from('posts').insert({
       title,
       content,
-      user_id: user?.id,
     });
 
     if (error) {
