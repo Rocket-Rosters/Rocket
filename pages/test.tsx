@@ -22,48 +22,14 @@ export default function Search() {
   };
 
   return (
-    // <div>
-    //   <input
-    //     type="text"
-    //     value={searchTerm}
-    //     onChange={(e) => setSearchTerm(e.target.value)}
-    //   />
-    //   <Button onClick={handleSearch}>Search</Button>
-    //   <ul>
-    //     {searchResults.map((result) => (
-          
-    //       <li key={result?.faculty}>{result?.id}</li>
-          
-    //     ))}
-    //   </ul>
-    // </div>
-  //   <div>
-  //     <input
-  //       type="text"
-  //       value={searchTerm}
-  //       onChange={(e) => setSearchTerm(e.target.value)}
-  //     />
-  //     <Button onClick={handleSearch}>Search</Button>
-  //     <ul>
-  //       {searchResults.map((result) => (
-  //         <li key={result?.id}>
-  //           <span style={{ color: 'purple' }}>{result?.full_name}</span>
-  //           <br />
-  //           ID: {result?.id}
-  //           <br />
-  //           Actions: [Add action buttons here]
-  //         </li>
-  //       ))}
-  //     </ul>
-  //   </div>
-  // );
   <div>
   <input
+    style={{ color: 'black' }}
     type="text"
     value={searchTerm}
     onChange={(e) => setSearchTerm(e.target.value)}
   />
-  <Button onClick={handleSearch}>Search</Button>
+  <Button onClick={handleSearch} style={{ padding: '1px', margin: '5px'}}>Search</Button>
   {searchResults.length > 0 && (
     <div style={{ backgroundColor: '#E6E6FA', color: 'black', border: '1px solid white' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
