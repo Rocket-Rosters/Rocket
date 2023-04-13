@@ -67,12 +67,12 @@ const Navbar = () => {
                 Add Students
               </Link>
               ) : null}
-              {user?.role === 'authenticated' && details?.role === 'students' ? (
+              {user?.role === 'authenticated' && details?.role === 'student' ? (
                 <Link href="/fileupload" className={s.link}>
                   Health Documents
                 </Link>
               ) : null}
-              {user?.role === 'authenticated' && details?.role === 'students' ? (
+              {user?.role === 'authenticated' && details?.role === 'student' ? (
                 <Link href="/announcements" className={s.link}>
                   Announcements
                 </Link>
