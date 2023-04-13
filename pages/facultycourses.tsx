@@ -32,7 +32,7 @@ function Card({ title, description, footer, children }: Props) {
         <p className="text-zinc-300">{description}</p>
         {children}
       </div>
-      <div className="border-t border-zinc-700 bg-zinc-900 p-4 text-zinc-500 rounded-b-md">
+      <div className="flex justify-center border-t border-zinc-700 bg-zinc-900 p-4 text-zinc-500 rounded-b-md ">
         {footer}
       </div>
     </div>
@@ -71,19 +71,19 @@ export default function FacultyCourses({ user }: { user: User }) {
 
   useEffect(() => {
     fetchCourses();
-    courseDetails(courses);
   }, []);
   // store each course in the database in the courses array
 
   async function fetchCourses() {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      const { data, error: any  } = await supabase
         .from('enrollment')
         .select('*')
         .eq('profile_id', user?.id);
       if (error) throw error;
       setCourses(data);
+      
       console.log("courses:", data);
     } catch (error) {
       setError(error.message);
@@ -91,17 +91,18 @@ export default function FacultyCourses({ user }: { user: User }) {
       setLoading(false);
     }
   }
-
-  async function courseDetails(courses: any) {
+  // this will take teh data from fetchcourses and then use the ids to then index the course table 
+  // and then display the course name
+  async function fetchCourseName(id:any) {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('courses')
+      const { data, error: any  } = await supabase
+        .from('course')
         .select('*')
-        .eq('id', courses.id);
-        console.log("course id:", courses.id);
+        .eq('id', id);
       if (error) throw error;
       setCourseName(data);
+
       console.log("course name:", data);
     } catch (error) {
       setError(error.message);
@@ -110,25 +111,60 @@ export default function FacultyCourses({ user }: { user: User }) {
     }
   }
 
+
   return (
-    <PageWrapper  allowedRoles={['faculty']}>
+    <PageWrapper allowedRoles={['faculty']}>
       <div className="flex flex-col items-center justify-center min-h-screen py-2">
         <Card title="Courses">
           <div className="flex flex-col items-center justify-center">
             {loading ? (
               <div className="text-zinc-300">Loading...</div>
             ) : (
-              <div className="flex flex-col items-center justify-center">
-                {courseName.map((course) => (
-                  <div key={course.id} className="text-zinc-300">
-                    {course.course_id}
+              <>
+                {courses.map((course: any) => (
+                  <div key={course.id}>
+                    <Card title="" footer=<Button>Take Attendence</Button>>
+                      <div className="text-zinc-300">{course.course_id}</div>
+                    </Card>
                   </div>
                 ))}
-              </div>
+              </>
             )}
+  
+            {error && <div className="text-zinc-300">{error}</div>}
+  
+            <div className="flex items-center justify-center mt-4 space-x-4">
+              <Button
+                size="small"
+                onClick={() => {
+                  fetchCourses();
+                }}
+              >
+                Refresh Courses
+              </Button>
+  
+              {courses.length > 0 && (
+                <Button
+                  size="small"
+                  onClick={() => {
+                    fetchCourseName(courses[0].course_id);
+                  }}
+                >
+                  Refresh Course Name
+                </Button>
+              )}
+            </div>
           </div>
         </Card>
       </div>
     </PageWrapper>
   );
+
 }
+
+
+
+
+
+
+
