@@ -40,7 +40,7 @@ const Navbar = () => {
         Skip to content
       </a>
       <div className="mx-auto max-w-6xl px-6">
-        <div className="flex justify-between align-center flex-row py-4 md:py-6 relative">
+        <div className="flex-grow justify-between align-center flex-row py-4 md:py-6 relative">
           <div className="flex flex-1 items-center">
             <Link href="/" className={s.logo} aria-label="Logo">
               <Logo />
@@ -52,16 +52,39 @@ const Navbar = () => {
               <Link href="/account" className={s.link}>
                 Account
               </Link>
+              {user?.role === 'authenticated' && details?.role === 'admin' ? (
+              <Link href="/addcourse" className={s.link}>
+                Add Courses
+              </Link>
+              ) : null}
+              {user?.role === 'authenticated' && details?.role === 'admin' ? (
+              <Link href="/addannouncements" className={s.link}>
+                Post Announcements
+              </Link>
+              ) : null}
+              {user?.role === 'authenticated' && details?.role === 'admin' ? (
+              <Link href="/invitenewuser" className={s.link}>
+                Add Students
+              </Link>
+              ) : null}
+              {user?.role === 'authenticated' && details?.role === 'students' ? (
+                <Link href="/fileupload" className={s.link}>
+                  Health Documents
+                </Link>
+              ) : null}
+              {user?.role === 'authenticated' && details?.role === 'students' ? (
+                <Link href="/announcements" className={s.link}>
+                  Announcements
+                </Link>
+              ) : null}
+              {user?.role === 'authenticated' && details?.role === 'faculty' ? (
+                <Link href="/announcements" className={s.link}>
+                  Announcements
+                </Link>
+              ) : null}
             </nav>
           </div>
           {/* @ts-ignore */}
-          <div className="flex flex-1 justify-center items-center">
-            {user?.role === 'authenticated' && details?.role === 'admin' ? (
-              <Link href="/admin" className={s.link}>
-                Admin
-              </Link>
-            ) : null}
-          </div>
 
           <div className="flex flex-1 justify-end space-x-8">
             {user ? (

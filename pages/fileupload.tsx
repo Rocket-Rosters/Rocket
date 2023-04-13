@@ -312,6 +312,7 @@ import React, { useEffect, useState } from 'react'
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { StorageFile } from '@supabase/storage-js'
 import { Database } from '../utils/database.types'
+import PageWrapper from '@/lib/pageWrapper';
 
 type Profiles = Database['public']['Tables']['profiles']['Row']
 
@@ -386,6 +387,8 @@ export default function Files({
   }
 
   return (
+    <PageWrapper allowedRoles={['student']}>
+      <>
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', border: '2px solid #9370DB' }}>
         <thead>
@@ -419,5 +422,7 @@ export default function Files({
         />
       </div>
     </div>
+    </>
+    </PageWrapper>
   );
 }  
