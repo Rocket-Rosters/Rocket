@@ -77,13 +77,18 @@ const Navbar = () => {
                   Announcements
                 </Link>
               ) : null}
+              {user?.role === 'authenticated' && details?.role === 'student' ? (
+                <Link href="/mycourses" className={s.link}>
+                  My Courses 
+                </Link>
+              ) : null}
               {user?.role === 'authenticated' && details?.role === 'faculty' ? (
                 <Link href="/announcements" className={s.link}>
                   Announcements
                 </Link>
               ) : null}
             </nav>
-          </div>
+          
           {/* @ts-ignore */}
 
           <div className="flex flex-1 justify-end space-x-8">
@@ -102,6 +107,7 @@ const Navbar = () => {
                 Sign in
               </Link>
             )}
+          </div>
           </div>
         </div>
       </div>
