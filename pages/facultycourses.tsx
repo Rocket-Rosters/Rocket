@@ -67,9 +67,11 @@ export default function FacultyCourses({ user }: { user: User }) {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [courseName, setCourseName] = useState([]);
 
   useEffect(() => {
     fetchCourses();
+    courseDetails(courses);
   }, []);
   // store each course in the database in the courses array
 
@@ -78,10 +80,29 @@ export default function FacultyCourses({ user }: { user: User }) {
       setLoading(true);
       const { data, error } = await supabase
         .from('enrollment')
-        .select('course_id')
-        .eq('faculty_id', user?.id);
+        .select('*')
+        .eq('profile_id', user?.id);
       if (error) throw error;
       setCourses(data);
+      console.log("courses:", data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function courseDetails(courses: any) {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('courses')
+        .select('*')
+        .eq('id', courses.id);
+        console.log("course id:", courses.id);
+      if (error) throw error;
+      setCourseName(data);
+      console.log("course name:", data);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -98,13 +119,9 @@ export default function FacultyCourses({ user }: { user: User }) {
               <div className="text-zinc-300">Loading...</div>
             ) : (
               <div className="flex flex-col items-center justify-center">
-                {courses.map((course) => (
+                {courseName.map((course) => (
                   <div key={course.id} className="text-zinc-300">
                     {course.course_id}
-                    <br />
-                    {course.profile_id}
-                    <br />
-                    {course.role}
                   </div>
                 ))}
               </div>
