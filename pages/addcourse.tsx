@@ -389,14 +389,18 @@ const CoursesPage = () => {
     }
   };
   // for each faculty and student in the array insert new row into the enrollment table
-  const handleEnrollment = async (facultyId: any, studentId: any, CourseId: any) => {
+  const handleEnrollment = async (
+    facultyId: any,
+    studentId: any,
+    CourseId: any
+  ) => {
     facultyId.forEach(async (element: any) => {
       const { data, error } = await supabase.from('enrollment').insert({
         course_id: CourseId,
         profile_id: element,
         role: 'faculty'
       });
-      if(error){
+      if (error) {
         console.error(error);
       }
     });
@@ -406,7 +410,7 @@ const CoursesPage = () => {
         profile_id: element,
         role: 'student'
       });
-      if(error){
+      if (error) {
         console.error(error);
       }
     });
@@ -443,7 +447,6 @@ const CoursesPage = () => {
 
     // for each faculty and student in the array insert new row into the enrollment table
     handleEnrollment(facultyId, studentId, id);
-
   };
 
   const handleUpdate = async (

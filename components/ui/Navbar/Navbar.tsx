@@ -90,6 +90,11 @@ const Navbar = () => {
                   Announcements
                 </Link>
               ) : null}
+              {user?.role === 'authenticated' && details?.role === 'faculty' ? (
+                <Link href="/facultycourses" className={s.link}>
+                  My Courses
+                </Link>
+              ) : null}
             </nav>
 
             {/* @ts-ignore */}

@@ -196,21 +196,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
 export default function Account({ user }: { user: User }) {
   const [details, setDetails] = useState<any>({
-    // id uuid not null,
-    // email text not null,
-    // username text null,
-    // first_name text null,
-    // last_name text null,
-    // full_name text null,
-    // avatar_url text null,
-    // website text null,
-    // role text not null default 'user'::text,
-    // address_line1 text null,
-    // address_line2 text null,
-    // city text null,
-    // state text null,
-    // postal_code text null,
-    // country text null,
     id: user.id,
     email: user.email,
     username: '',
