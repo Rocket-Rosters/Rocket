@@ -3,6 +3,7 @@ import { useUser } from '@/utils/useUser';
 import { Context } from './providers/provider';
 import { useRouter } from 'next/router';
 import { supabase } from '@/utils/supabase-client';
+import LoadingDots from '@/components/ui/LoadingDots/LoadingDots';
 interface PageProps {
   children: ReactNode;
   allowedRoles: string[];
@@ -47,7 +48,7 @@ export default function PageWrapper({ children, allowedRoles }: PageProps) {
         <>{children}</>
       ) : (
         <>
-          <p>Not Allowed</p>
+          <p><LoadingDots/></p>
         </>
       )}
     </div>
