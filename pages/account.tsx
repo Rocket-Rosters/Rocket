@@ -171,7 +171,7 @@ function Card({ title, description, footer, children }: Props) {
     </div>
   );
 }
-
+// s/c render page on server side and then on client side
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const supabase = createServerSupabaseClient(ctx);
   const {
@@ -233,7 +233,6 @@ export default function Account({ user }: { user: User }) {
   useEffect(() => {
     getUserDetails().then(({ data }) => {
       setDetails(data);
-      console.log(data);
     });
   }, []);
 
@@ -249,8 +248,6 @@ export default function Account({ user }: { user: User }) {
 
     if (error) {
       console.log(error);
-    } else {
-      console.log('Updated details:', updatedProfile);
     }
   };
 
@@ -283,7 +280,13 @@ export default function Account({ user }: { user: User }) {
           footer={<p>We will email you to verify the change.</p>}
         >
           {Object.entries(details).map(([key, value]) => {
-            if (key === 'id'  || key === "email" || key === "full_name" || key==="avatar_url") return <></>;
+            if (
+              key === 'id' ||
+              key === 'email' ||
+              key === 'full_name' ||
+              key === 'avatar_url'
+            )
+              return null;
             return (
               <div key={key} className="flex flex-col mt-4">
                 <label htmlFor={key} className="mb-2 font-medium">

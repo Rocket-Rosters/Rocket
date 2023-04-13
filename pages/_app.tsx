@@ -26,10 +26,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       <Provider>
         <SessionContextProvider supabaseClient={supabaseClient}>
           <MyUserContextProvider>
-          <MyProfileContextProvider>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
+            <MyProfileContextProvider>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
             </MyProfileContextProvider>
           </MyUserContextProvider>
         </SessionContextProvider>

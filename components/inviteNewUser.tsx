@@ -1,43 +1,41 @@
-import { useState } from 'react'
-import { createClient } from '@supabase/supabase-js'
-import type { NextPage } from 'next'
+import { useState } from 'react';
+import { createClient } from '@supabase/supabase-js';
+import type { NextPage } from 'next';
 
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 //@ts-ignore
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 type FormValues = {
-  email: string
-}
+  email: string;
+};
 
 const InviteUser: NextPage = () => {
-  const [formValues, setFormValues] = useState<FormValues>({ email: '' })
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
+  const [formValues, setFormValues] = useState<FormValues>({ email: '' });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setIsLoading(true)
-    setError(null)
+    event.preventDefault();
+    setIsLoading(true);
+    setError(null);
 
     try {
       //@ts-ignore
-      const { error } = await supabase.auth.inviteUser(formValues.email)
+      const { error } = await supabase.auth.inviteUser(formValues.email);
       if (error) {
-        throw new Error(error.message)
+        throw new Error(error.message);
       }
-      setSuccess(true)
+      setSuccess(true);
     } catch (error: any) {
-
-      setError(error.message)
+      setError(error.message);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div>
@@ -64,7 +62,7 @@ const InviteUser: NextPage = () => {
         </form>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default InviteUser
+export default InviteUser;
