@@ -168,6 +168,7 @@ import { supabase } from '@/utils/supabase-client';
 import { v4 as uuidv4 } from 'uuid';
 import Button from '@/components/ui/Button';
 import PageWrapper from '@/lib/pageWrapper';
+import Search from './test'
 
 interface Props {
   title: string;
@@ -407,6 +408,10 @@ const CoursesPage = () => {
     <PageWrapper allowedRoles={['admin']}>
       <>
         <div>
+          <Card title="Courses" description="List of courses">
+            <Search></Search>
+          </Card>
+      
           <Card
             title="Create Course"
             description="Enter new course information"
