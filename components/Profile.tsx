@@ -92,6 +92,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { createClient } from '@supabase/supabase-js';
 import { supabase } from '@supabase/auth-ui-shared';
+import { useUser } from '@/utils/useUser';
 
 type ProfileData = {
   id: number;
@@ -113,14 +114,14 @@ export default function Profile() {
   useEffect(() => {
     async function fetchProfileData() {
       try {
-        const user = supabase.auth.user();
+        const user = useUser();
         if (user) {
           const { data, error } = await supabase
             .from<ProfileData>('profiles')
             .select('*')
-            .eq('user_id', user.id)
+            .eq('user_id', user.userDetails)
             .single();
-          if (data) {
+          if (data) { 
             setProfileData(data);
           }
         } else {
@@ -135,12 +136,12 @@ export default function Profile() {
 
   async function handleUpdateProfile() {
     try {
-      const user = supabase.auth.user();
+      const user = useUser();
       if (user && profileData) {
         const { error } = await supabase
           .from<ProfileData>('profiles')
           .update({ full_name: newName })
-          .eq('user_id', user.id);
+          .eq('user_id', user.userDetails);
         if (!error) {
           setProfileData({ ...profileData, full_name: newName });
         }

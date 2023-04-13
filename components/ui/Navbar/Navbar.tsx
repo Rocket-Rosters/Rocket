@@ -52,6 +52,9 @@ const Navbar = () => {
               <Link href="/account" className={s.link}>
                 Account
               </Link>
+              <Link href="/profile" className={s.link}>
+                Profile
+              </Link>
               {user?.role === 'authenticated' && details?.role === 'admin' ? (
                 <Link href="/addcourse" className={s.link}>
                   Add Courses

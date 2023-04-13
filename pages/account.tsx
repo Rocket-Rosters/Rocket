@@ -148,6 +148,7 @@ import { useUser } from '@/utils/useUser';
 import { postData } from '@/utils/helpers';
 import { supabase } from '@/utils/supabase-client';
 import { json } from 'stream/consumers';
+import Avatar from '@/components/Avatar';
 
 interface Props {
   title: string;
