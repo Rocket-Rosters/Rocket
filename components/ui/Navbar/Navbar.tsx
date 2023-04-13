@@ -82,7 +82,7 @@ const Navbar = () => {
               ) : null}
               {user?.role === 'authenticated' && details?.role === 'student' ? (
                 <Link href="/mycourses" className={s.link}>
-                  My Courses 
+                  My Courses
                 </Link>
               ) : null}
               {user?.role === 'authenticated' && details?.role === 'faculty' ? (
@@ -91,26 +91,26 @@ const Navbar = () => {
                 </Link>
               ) : null}
             </nav>
-          
-          {/* @ts-ignore */}
 
-          <div className="flex flex-1 justify-end space-x-8">
-            {user ? (
-              <span
-                className={s.link}
-                onClick={async () => {
-                  await supabaseClient.auth.signOut();
-                  router.push('/signin');
-                }}
-              >
-                Sign out
-              </span>
-            ) : (
-              <Link href="/signin" className={s.link}>
-                Sign in
-              </Link>
-            )}
-          </div>
+            {/* @ts-ignore */}
+
+            <div className="flex flex-1 justify-end space-x-8">
+              {user ? (
+                <span
+                  className={s.link}
+                  onClick={async () => {
+                    await supabaseClient.auth.signOut();
+                    router.push('/signin');
+                  }}
+                >
+                  Sign out
+                </span>
+              ) : (
+                <Link href="/signin" className={s.link}>
+                  Sign in
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </div>

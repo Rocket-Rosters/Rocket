@@ -9,7 +9,6 @@
 // import { MyProfileContextProvider, useProfile } from '@/utils/useProfiles';
 // import { UserContext } from '@/utils/useUser';
 
-
 // interface Props {
 //   title: string;
 //   description?: string;
@@ -50,7 +49,7 @@
 
 //   console.log(user);
 //   console.log('avatar',avatarUrl);
-  
+
 //   // async function handleAvatarUpload(filePath) {
 //   //   try {
 //   //     const { data, error } = await supabase.storage
@@ -85,22 +84,22 @@
 //       const { data, error } = await supabase.storage
 //         .from('avatars')
 //         .upload(filePath.name, filePath);
-  
+
 //       if (error) {
 //         throw error;
 //       }
-  
+
 //       const avatarUrl = data.path;
-  
+
 //       const { error: profileError } = await supabase
 //         .from('profiles')
 //         .update({ avatar_url: avatarUrl })
 //         .eq('id', user?.id);
-  
+
 //       if (profileError) {
 //         throw profileError;
 //       }
-  
+
 //       setAvatarUrl(avatarUrl);
 //     } catch (error) {
 //       console.error(error);
@@ -152,12 +151,11 @@
 
 // export default ProfilePage;
 
-
-import { useState, useEffect, ReactNode } from 'react'
-import { supabase } from '../utils/supabase-client'
-import { UserContextProvider } from '@supabase/auth-ui-react/dist/components/Auth/UserContext'
-import { ProfileContext } from '@/utils/useProfiles'
-import { useUser } from '@supabase/auth-helpers-react'
+import { useState, useEffect, ReactNode } from 'react';
+import { supabase } from '../utils/supabase-client';
+import { UserContextProvider } from '@supabase/auth-ui-react/dist/components/Auth/UserContext';
+import { ProfileContext } from '@/utils/useProfiles';
+import { useUser } from '@supabase/auth-helpers-react';
 
 interface CardProps {
   title: string;
@@ -182,113 +180,106 @@ function Card({ title, description, footer, children }: CardProps) {
 }
 
 interface Props {
-  size: number
-  url: string | null
-  onUpload: (filePath: string) => void
-  uid: string
+  size: number;
+  url: string | null;
+  onUpload: (filePath: string) => void;
+  uid: string;
 }
 
 export default function Avatar({ url, size = 150, onUpload, uid }: Props) {
-  const [uploading, setUploading] = useState(false)
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
-  const avatarSize = { height: size, width: size }
+  const [uploading, setUploading] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const avatarSize = { height: size, width: size };
   const user = useUser();
 
   useEffect(() => {
     if (url) {
-      setAvatarUrl(url)
+      setAvatarUrl(url);
     } else {
-      downloadImage(uid)
+      downloadImage(uid);
     }
-  }, [url, uid])
+  }, [url, uid]);
 
   async function downloadImage(uid: string) {
     try {
-      const { data, error } = await supabase.storage.from('avatars').download(`${uid}/avatar`)
+      const { data, error } = await supabase.storage
+        .from('avatars')
+        .download(`${uid}/avatar`);
 
       if (error) {
-        throw error
+        throw error;
       }
 
-      const url = URL.createObjectURL(data)
-      setAvatarUrl(url)
+      const url = URL.createObjectURL(data);
+      setAvatarUrl(url);
     } catch (error) {
-      console.log('Error downloading image: ', error.message)
+      console.log('Error downloading image: ', error.message);
     }
   }
 
   async function uploadAvatar(event: React.ChangeEvent<HTMLInputElement>) {
     try {
-      setUploading(true)
+      setUploading(true);
 
       if (!event.target.files || event.target.files.length === 0) {
-        throw new Error('You must select an image to upload.')
+        throw new Error('You must select an image to upload.');
       }
 
-      const file = event.target.files[0]
-      const fileExt = file.name.split('.').pop()
-      const fileName = `${Math.random()}.${fileExt}`
+      const file = event.target.files[0];
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
       const filePath = `${uid}/avatar`;
 
-      let { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file)
+      let { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file);
 
       if (uploadError) {
-        throw uploadError
+        throw uploadError;
       }
 
       //@ts-ignore
-      onUpload(filePath)
+      onUpload(filePath);
     } catch (error) {
-      alert(error.message)
+      alert(error.message);
     } finally {
-      setUploading(false)
+      setUploading(false);
     }
   }
 
   return (
-    <div >
-          <Card
-    title="Profile Image"
-    description=""
-    footer={<p></p>}
-    >
-      <img
-        src={avatarUrl ? avatarUrl : `https://place-hold.it/${size}x${size}`}
-        alt={avatarUrl ? 'Avatar' : 'No image'}
-        className="avatar image"
-        style={{ height: size, width: size }}
-      />
-      {uploading ? (
-        'Uploading...'
-      ) : (
-        <>
-        
-          <label className="button primary block" htmlFor="single">
-            Upload an avatar
-          </label>
-          <div className="visually-hidden">
-            <input
-              type="file"
-              id="single"
-              accept="image/*"
-              onChange={uploadAvatar}
-              disabled={uploading}
-            />
-          </div>
-        </>
-      )}
+    <div>
+      <Card title="Profile Image" description="" footer={<p></p>}>
+        <img
+          src={avatarUrl ? avatarUrl : `https://place-hold.it/${size}x${size}`}
+          alt={avatarUrl ? 'Avatar' : 'No image'}
+          className="avatar image"
+          style={{ height: size, width: size }}
+        />
+        {uploading ? (
+          'Uploading...'
+        ) : (
+          <>
+            <label className="button primary block" htmlFor="single">
+              Upload an avatar
+            </label>
+            <div className="visually-hidden">
+              <input
+                type="file"
+                id="single"
+                accept="image/*"
+                onChange={uploadAvatar}
+                disabled={uploading}
+              />
+            </div>
+          </>
+        )}
       </Card>
       <div>
-      <Card
-        title="Your Email"
-        description=""
-        footer={<p></p>}
-      >
-        <p className="text-xl mt-8 mb-4 font-semibold">
-          {user?.email}
-        </p>
-      </Card>
+        <Card title="Your Email" description="" footer={<p></p>}>
+          <p className="text-xl mt-8 mb-4 font-semibold">{user?.email}</p>
+        </Card>
       </div>
     </div>
-  )
+  );
 }

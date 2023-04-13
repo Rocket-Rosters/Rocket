@@ -121,7 +121,7 @@ export default function Profile() {
             .select('*')
             .eq('user_id', user.userDetails)
             .single();
-          if (data) { 
+          if (data) {
             setProfileData(data);
           }
         } else {

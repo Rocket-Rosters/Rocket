@@ -168,7 +168,7 @@ import { supabase } from '@/utils/supabase-client';
 import { v4 as uuidv4 } from 'uuid';
 import Button from '@/components/ui/Button';
 import PageWrapper from '@/lib/pageWrapper';
-import Search, {facultyId, studentId} from './test'
+import Search, { facultyId, studentId } from './test';
 
 interface Props {
   title: string;
@@ -265,8 +265,6 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
           >
             Meeting Pattern
           </th>
-
-          
         </tr>
       </thead>
       <tbody>
@@ -280,13 +278,31 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
     Meeting Pattern text null default 'M,TU,W,TH,F,SA,SU 12-1 am'::text, */}
         {courses.map((course: any) => (
           <tr key={course.id}>
-            <td style={{ border: '1px solid purple', padding: '10px', fontSize: '14px' }}>
+            <td
+              style={{
+                border: '1px solid purple',
+                padding: '10px',
+                fontSize: '14px'
+              }}
+            >
               {course.name}
             </td>
-            <td style={{ border: '1px solid purple', padding: '10px', fontSize: '14px' }}>
+            <td
+              style={{
+                border: '1px solid purple',
+                padding: '10px',
+                fontSize: '14px'
+              }}
+            >
               {course.start_date}
             </td>
-            <td style={{ border: '1px solid purple', padding: '10px', fontSize: '14px' }}>
+            <td
+              style={{
+                border: '1px solid purple',
+                padding: '10px',
+                fontSize: '14px'
+              }}
+            >
               {course.end_date}
             </td>
             {/* <td style={{ border: '1px solid purple', padding: '10px' }}>
@@ -295,7 +311,13 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
             {/* <td style={{ border: '1px solid purple', padding: '10px' }}>
               {course.students}
             </td> */}
-            <td style={{ border: '1px solid purple', padding: '10px', fontSize: '14px' }}>
+            <td
+              style={{
+                border: '1px solid purple',
+                padding: '10px',
+                fontSize: '14px'
+              }}
+            >
               {course.faculty}
             </td>
             <td style={{ border: '1px solid purple', padding: '10px' }}>

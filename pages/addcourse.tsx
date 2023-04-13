@@ -168,8 +168,7 @@ import { supabase } from '@/utils/supabase-client';
 import { v4 as uuidv4 } from 'uuid';
 import Button from '@/components/ui/Button';
 import PageWrapper from '@/lib/pageWrapper';
-import Search, {facultyId, studentId} from './test'
-
+import Search, { facultyId, studentId } from './test';
 interface Props {
   title: string;
   description?: string;
@@ -290,13 +289,31 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
     Meeting Pattern text null default 'M,TU,W,TH,F,SA,SU 12-1 am'::text, */}
         {courses.map((course: any) => (
           <tr key={course.id}>
-            <td style={{ border: '1px solid purple', padding: '10px', fontSize: '14px' }}>
+            <td
+              style={{
+                border: '1px solid purple',
+                padding: '10px',
+                fontSize: '14px'
+              }}
+            >
               {course.name}
             </td>
-            <td style={{ border: '1px solid purple', padding: '10px', fontSize: '14px' }}>
+            <td
+              style={{
+                border: '1px solid purple',
+                padding: '10px',
+                fontSize: '14px'
+              }}
+            >
               {course.start_date}
             </td>
-            <td style={{ border: '1px solid purple', padding: '10px', fontSize: '14px' }}>
+            <td
+              style={{
+                border: '1px solid purple',
+                padding: '10px',
+                fontSize: '14px'
+              }}
+            >
               {course.end_date}
             </td>
             {/* <td style={{ border: '1px solid purple', padding: '10px' }}>
@@ -305,7 +322,13 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
             {/* <td style={{ border: '1px solid purple', padding: '10px' }}>
               {course.students}
             </td> */}
-            <td style={{ border: '1px solid purple', padding: '10px', fontSize: '14px' }}>
+            <td
+              style={{
+                border: '1px solid purple',
+                padding: '10px',
+                fontSize: '14px'
+              }}
+            >
               {course.faculty}
             </td>
             <td style={{ border: '1px solid purple', padding: '10px' }}>
@@ -340,6 +363,9 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
 }
 
 const CoursesPage = () => {
+  // i want to make a UUID usinf uuidv4
+  const { v4: uuidv4 } = require('uuid');
+  let id = uuidv4();
   const [courses, setCourses] = useState([]);
   const [name, setName] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -362,11 +388,34 @@ const CoursesPage = () => {
       setCourses(data);
     }
   };
+  // for each faculty and student in the array insert new row into the enrollment table
+  const handleEnrollment = async (facultyId: any, studentId: any, CourseId: any) => {
+    facultyId.forEach(async (element: any) => {
+      const { data, error } = await supabase.from('enrollment').insert({
+        course_id: CourseId,
+        profile_id: element,
+        role: 'faculty'
+      });
+      if(error){
+        console.error(error);
+      }
+    });
+    studentId.forEach(async (element: any) => {
+      const { data, error } = await supabase.from('enrollment').insert({
+        course_id: CourseId,
+        profile_id: element,
+        role: 'student'
+      });
+      if(error){
+        console.error(error);
+      }
+    });
+  };
 
   const handleCreate = async (event: any) => {
     event.preventDefault();
 
-    const id = uuidv4();
+    let id = uuidv4();
 
     const { data, error } = await supabase.from('courses').insert({
       id,
@@ -374,7 +423,7 @@ const CoursesPage = () => {
       start_date: startDate,
       end_date: endDate,
       faculty: [facultyId],
-      students: [studentId],
+      student: [studentId],
       meeting: meetingPattern
     });
 
@@ -386,7 +435,15 @@ const CoursesPage = () => {
       setName('');
       setStartDate('');
       setEndDate('');
+      setFaculty('');
+      setStudents('');
+      setMeetingPattern('');
+      id = uuidv4();
     }
+
+    // for each faculty and student in the array insert new row into the enrollment table
+    handleEnrollment(facultyId, studentId, id);
+
   };
 
   const handleUpdate = async (
@@ -427,6 +484,8 @@ const CoursesPage = () => {
       setCourses(updatedCourses);
     }
   };
+  // for all faculty and students in there array
+  // const addEnrollment = async (courseId: any, studentId: any) => {
 
   return (
     <PageWrapper allowedRoles={['admin']}>
@@ -435,13 +494,34 @@ const CoursesPage = () => {
           <Card title="Search" description="List of users">
             <Search></Search>
           </Card>
-      
+
           <Card
             title="Create Course"
             description="Enter new course information"
           >
             {/* <h1 style={{ color: 'purple', marginBottom: '20px' }}>Make New Course</h1> */}
             <form onSubmit={handleCreate}>
+              <div style={{ marginBottom: '10px' }}>
+                <label
+                  htmlFor="ID"
+                  style={{ color: '#9370DB', marginRight: '10px' }}
+                >
+                  ID:
+                </label>
+                <input
+                  type="text"
+                  id="ID"
+                  value={id}
+                  onChange={(event) => setId(event.target.value)}
+                  style={{
+                    color: 'black',
+                    padding: '5px',
+                    borderRadius: '5px',
+
+                    border: '1px solid white'
+                  }}
+                />
+              </div>
               <div style={{ marginBottom: '10px' }}>
                 <label
                   htmlFor="name"
@@ -532,7 +612,7 @@ const CoursesPage = () => {
                 <input
                   type="array"
                   id="faculty"
-                  value= {facultyId}
+                  value={facultyId}
                   onChange={(event) => setFaculty(event.target.value)}
                   style={{
                     color: 'black',
