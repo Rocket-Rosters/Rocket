@@ -200,7 +200,8 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
         borderCollapse: 'collapse',
         border: '2px solid black',
         backgroundColor: '#E6E6FA',
-        color: 'black'
+        color: 'black',
+        fontSize: '14px'
       }}
     >
       <thead>
@@ -210,7 +211,8 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
               border: '1px solid purple',
               padding: '10px',
               backgroundColor: '#9370DB',
-              color: 'white'
+              color: 'white',
+              fontSize: '14px'
             }}
           >
             Name
@@ -220,7 +222,8 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
               border: '1px solid purple',
               padding: '10px',
               backgroundColor: '#9370DB',
-              color: 'white'
+              color: 'white',
+              fontSize: '14px'
             }}
           >
             Start date
@@ -230,7 +233,8 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
               border: '1px solid purple',
               padding: '10px',
               backgroundColor: '#9370DB',
-              color: 'white'
+              color: 'white',
+              fontSize: '14px'
             }}
           >
             End date
@@ -244,7 +248,8 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
               border: '1px solid purple',
               padding: '10px',
               backgroundColor: '#9370DB',
-              color: 'white'
+              color: 'white',
+              fontSize: '14px'
             }}
           >
             Faculty
@@ -254,7 +259,8 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
               border: '1px solid purple',
               padding: '10px',
               backgroundColor: '#9370DB',
-              color: 'white'
+              color: 'white',
+              fontSize: '14px'
             }}
           >
             Meeting Pattern
@@ -265,7 +271,8 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
               border: '1px solid purple',
               padding: '10px',
               backgroundColor: '#9370DB',
-              color: 'white'
+              color: 'white',
+              fontSize: '14px'
             }}
           >
             Actions
@@ -283,13 +290,13 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
     Meeting Pattern text null default 'M,TU,W,TH,F,SA,SU 12-1 am'::text, */}
         {courses.map((course: any) => (
           <tr key={course.id}>
-            <td style={{ border: '1px solid purple', padding: '10px' }}>
+            <td style={{ border: '1px solid purple', padding: '10px', fontSize: '14px' }}>
               {course.name}
             </td>
-            <td style={{ border: '1px solid purple', padding: '10px' }}>
+            <td style={{ border: '1px solid purple', padding: '10px', fontSize: '14px' }}>
               {course.start_date}
             </td>
-            <td style={{ border: '1px solid purple', padding: '10px' }}>
+            <td style={{ border: '1px solid purple', padding: '10px', fontSize: '14px' }}>
               {course.end_date}
             </td>
             {/* <td style={{ border: '1px solid purple', padding: '10px' }}>
@@ -298,7 +305,7 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
             {/* <td style={{ border: '1px solid purple', padding: '10px' }}>
               {course.students}
             </td> */}
-            <td style={{ border: '1px solid purple', padding: '10px' }}>
+            <td style={{ border: '1px solid purple', padding: '10px', fontSize: '14px' }}>
               {course.faculty}
             </td>
             <td style={{ border: '1px solid purple', padding: '10px' }}>
