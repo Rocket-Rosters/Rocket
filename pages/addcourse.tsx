@@ -168,7 +168,7 @@ import { supabase } from '@/utils/supabase-client';
 import { v4 as uuidv4 } from 'uuid';
 import Button from '@/components/ui/Button';
 import PageWrapper from '@/lib/pageWrapper';
-import Search from './test'
+import Search, {facultyId, studentId} from './test'
 
 interface Props {
   title: string;
@@ -365,14 +365,17 @@ const CoursesPage = () => {
       id,
       name,
       start_date: startDate,
-      end_date: endDate
+      end_date: endDate,
+      faculty: [facultyId],
+      students: [studentId],
+      meeting: meetingPattern
     });
 
     if (error) {
       console.error(error);
     } else {
       console.log('Course created:', data);
-      setCourses([...courses, data[0]]);
+      // setCourses([...courses, data[0]]);
       setName('');
       setStartDate('');
       setEndDate('');
@@ -422,7 +425,7 @@ const CoursesPage = () => {
     <PageWrapper allowedRoles={['admin']}>
       <>
         <div>
-          <Card title="Courses" description="List of courses">
+          <Card title="Search" description="List of users">
             <Search></Search>
           </Card>
       
@@ -520,9 +523,9 @@ const CoursesPage = () => {
                   Faculty:
                 </label>
                 <input
-                  type="text"
+                  type="array"
                   id="faculty"
-                  value={faculty}
+                  value= {facultyId}
                   onChange={(event) => setFaculty(event.target.value)}
                   style={{
                     color: 'black',
@@ -540,9 +543,9 @@ const CoursesPage = () => {
                   Students:
                 </label>
                 <input
-                  type="text"
+                  type="array"
                   id="students"
-                  value={students}
+                  value={studentId}
                   onChange={(event) => setStudents(event.target.value)}
                   style={{
                     color: 'black',

@@ -3,9 +3,29 @@ import { supabase } from '@/utils/supabase-client';
 import { v4 as uuidv4 } from 'uuid';
 import Button from '@/components/ui/Button';
 import PageWrapper from '@/lib/pageWrapper';
+
+  export let studentId: any[] = [];
+  export let facultyId = [];
 export default function Search() {
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+
+  const handleStudents = (data: any) => {
+    studentId.push(data);  
+    console.log(data);
+    console.log(studentId);
+  }
+
+  const handleFaculty = (data: any) => {
+    facultyId.push(data);  
+  }
+
+  const handleClear = () => {
+    setSearchTerm('');
+    studentId = [];
+    facultyId = [];
+  }
 
   const handleSearch = async () => {
     const { data, error } = await supabase
@@ -53,11 +73,8 @@ export default function Search() {
               <Button
                 style={{ padding: '5px', marginRight: '5px' }}
                 onClick={() =>
-                  handleUpdate(
-                    course.id,
-                    'New name',
-                    course.start_date,
-                    course.end_date
+                  handleStudents(
+                    result?.id
                   )
                 }
               >
@@ -66,11 +83,8 @@ export default function Search() {
               <Button
                 style={{ padding: '5px', marginRight: '5px' }}
                 onClick={() =>
-                  handleUpdate(
-                    course.id,
-                    'New name',
-                    course.start_date,
-                    course.end_date
+                  handleFaculty(
+                    result?.id
                   )
                 }
               >
@@ -83,6 +97,6 @@ export default function Search() {
       </table>
     </div>
   )}
-</div>
-);
-}
+  </div>
+  )}
+
