@@ -9,22 +9,8 @@ import {
   createServerSupabaseClient,
   User
 } from '@supabase/auth-helpers-nextjs';
-import { useUser as useSupabaseUser } from '@supabase/auth-helpers-react';
+import { useUser } from '@supabase/auth-helpers-react';
 
-
-type UserContextValue = {
-  user: User | null;
-  session: any;
-};
-
-const UserContext = createContext<UserContextValue>({
-  user: null,
-  session: null,
-});
-
-export const useUser = (): UserContextValue => {
-  return useContext(UserContext);
-};
 
 interface Props {
   title: string;
@@ -195,12 +181,14 @@ const CoursesPage = () => {
   const [studentId, setStudentId] = useState('');
   const [meetingPattern, setMeetingPattern] = useState('');
   const [id, setId] = useState(uuidv4());
-  const { user } = useUser();
-  useEffect(() => {
+  const user = useUser();
+  // console.log("User",user);
+  useEffect(() => { 
     fetchCourses();
   }, []);
-
+console.log("flag")
   const fetchCourses = async () => {
+    console.log("FetchCourse",user);
     const { data, error } = await supabase
       .from('enrollment')
       .select('course_id')
