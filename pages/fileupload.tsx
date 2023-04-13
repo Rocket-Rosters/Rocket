@@ -386,39 +386,31 @@ export default function Files({
   }
 
   return (
-    <div>
-      <div style={{ width: '100%', display: 'flex', flexWrap: 'wrap' }}>
-        {files.map((file) => (
-          <div
-          key={file.name}
-          style={{
-            width: '200px',
-            height: '200px',
-            margin: '10px',
-            border: '1px solid #ccc',
-            borderRadius: '5px',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            // backgroundImage: `url(${supabase.storage.getBucket('files')})`,
-          }}
-          >
-            <img
-              src={imageUrl}
-              alt={file.name}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-          </div>
-        ))}
-      </div>
-      <div style={{ width: '100%', marginTop: '20px' }}>
-        <label className="button primary block" htmlFor="single">
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', border: '2px solid #9370DB' }}>
+        <thead>
+          <tr style={{ backgroundColor: '#9370DB' }}>
+            <th style={{ textAlign: 'center', padding: '10px', borderBottom: '1px solid white', color: 'white', borderRight: '2px solid white' }}>Health Documents</th>
+          </tr>
+        </thead>
+        <tbody>
+          {files.map((file) => (
+            <tr key={file.name} style={{ borderBottom: '1px solid #9370DB', backgroundColor: '#E6E6FA' }}>
+              <td style={{ padding: '10px', borderRight: '2px solid #9370DB', color: 'black' }}>{file.name}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+        <label
+          className="button primary"
+          htmlFor="single"
+          style={{ backgroundColor: '#9370DB', color: 'white', padding: '10px 20px', border: '2px solid #9370DB', cursor: 'pointer' }}
+        >
           {uploading ? 'Uploading ...' : 'Upload'}
         </label>
         <input
-          style={{
-            visibility: 'hidden',
-            position: 'absolute',
-          }}
+          style={{ visibility: 'hidden', position: 'absolute' }}
           type="file"
           id="single"
           accept="image/*"
@@ -427,5 +419,5 @@ export default function Files({
         />
       </div>
     </div>
-  )
-}
+  );
+}  
