@@ -251,7 +251,7 @@ console.log("flag")
   // const addEnrollment = async (courseId: any, studentId: any) => {
 
   return (
-    <PageWrapper allowedRoles={['faculty']}>
+    <PageWrapper allowedRoles={['admin']}>
       <>
         <div>
           <Card title="Courses" description="List of all courses">

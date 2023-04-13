@@ -192,6 +192,8 @@ export default function Avatar({ url, size = 150, onUpload, uid }: Props) {
   const avatarSize = { height: size, width: size };
   const user = useUser();
 
+  console.log(user?.id);
+
   useEffect(() => {
     if (url) {
       setAvatarUrl(url);
@@ -200,7 +202,7 @@ export default function Avatar({ url, size = 150, onUpload, uid }: Props) {
     }
   }, [url, uid]);
 
-  async function downloadImage(uid: string) {
+  async function downloadImage(uid = user?.id) {
     try {
       const { data, error } = await supabase.storage
         .from('avatars')
@@ -228,7 +230,7 @@ export default function Avatar({ url, size = 150, onUpload, uid }: Props) {
       const file = event.target.files[0];
       const fileExt = file.name.split('.').pop();
       const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `${uid}/avatar`;
+      const filePath = `${user?.id}/avatar`;
 
       let { error: uploadError } = await supabase.storage
         .from('avatars')
