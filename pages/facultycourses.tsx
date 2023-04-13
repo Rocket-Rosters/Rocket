@@ -89,7 +89,7 @@ export default function FacultyCourses({ user }: { user: User }) {
   }
 
   return (
-    <PageWrapper children={undefined} allowedRoles={['faculty']}>
+    <PageWrapper  allowedRoles={['faculty']}>
       <div className="flex flex-col items-center justify-center min-h-screen py-2">
         <Card title="Courses">
           <div className="flex flex-col items-center justify-center">
