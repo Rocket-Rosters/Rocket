@@ -1,7 +1,11 @@
 import { useState, ReactNode, useEffect } from 'react';
 import Link from 'next/link';
 import { GetServerSidePropsContext } from 'next';
-import { createServerSupabaseClient, User, Session } from '@supabase/auth-helpers-nextjs';
+import {
+  createServerSupabaseClient,
+  User,
+  Session
+} from '@supabase/auth-helpers-nextjs';
 import LoadingDots from '@/components/ui/LoadingDots';
 import Button from '@/components/ui/Button';
 import { useUser } from '@/utils/useUser';
@@ -35,20 +39,20 @@ function Card({ title, description, footer, children }: Props) {
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const supabase = createServerSupabaseClient(ctx);
   const {
-    data: { session },
+    data: { session }
   } = await supabase.auth.getSession();
   if (!session)
     return {
       redirect: {
         destination: '/signin',
-        permanent: false,
-      },
+        permanent: false
+      }
     };
   return {
     props: {
       initialSession: session,
-      user: session.user,
-    },
+      user: session.user
+    }
   };
 };
 
@@ -70,31 +74,33 @@ export default function AdminPage() {
   }, []);
 
   return (
-    
-      <>
-        <Card title="Announcements">
-          {loading ? (
-            <LoadingDots />
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {posts.map((post) => (
-                <Card
-                  key={post.id}
-                  title={post.title}
-                  description={post.content}
-                  footer={
-                    <Link href={`/posts/${post.id}`} passHref={true} legacyBehavior={true}>
-                      <a>
-                        <Button>Read more</Button>
-                      </a>
-                    </Link>
-                  }
-                />
-              ))}
-            </div>
-          )}
-        </Card>
-      </>
-    
+    <>
+      <Card title="Announcements">
+        {loading ? (
+          <LoadingDots />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {posts.map((post) => (
+              <Card
+                key={post.id}
+                title={post.title}
+                description={post.content}
+                footer={
+                  <Link
+                    href={`/posts/${post.id}`}
+                    passHref={true}
+                    legacyBehavior={true}
+                  >
+                    <a>
+                      <Button>Read more</Button>
+                    </a>
+                  </Link>
+                }
+              />
+            ))}
+          </div>
+        )}
+      </Card>
+    </>
   );
 }

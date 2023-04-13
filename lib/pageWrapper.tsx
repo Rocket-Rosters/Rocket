@@ -48,7 +48,9 @@ export default function PageWrapper({ children, allowedRoles }: PageProps) {
         <>{children}</>
       ) : (
         <>
-          <p><LoadingDots/></p>
+          <p>
+            <LoadingDots />
+          </p>
         </>
       )}
     </div>

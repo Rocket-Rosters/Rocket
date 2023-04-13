@@ -1,7 +1,5 @@
 // import Files from '@/components/Files';
 
-
-
 // export default function FileUploadPage() {
 // return <Files uid={''} url={''} size={0} onUpload={function (url: string): void {
 //     throw new Error('Function not implemented.');
@@ -15,7 +13,6 @@
 //   const { storage } = useSupabase();
 //   const [files, setFiles] = useState(null);
 // //   const [files, setFiles] = useState<FileObject[]>([]);
-
 
 //   useEffect(() => {
 //     async function fetchFiles() {
@@ -45,7 +42,6 @@
 //     </div>
 //   );
 // }
-
 
 // import React, { useEffect, useState } from 'react'
 // import { useSupabaseClient } from '@supabase/auth-helpers-react'
@@ -129,7 +125,6 @@
 //     </div>
 //   )
 // }
-
 
 // import React, { useEffect, useState, ChangeEventHandler } from 'react';
 // import { useSupabaseClient } from '@supabase/auth-helpers-react';
@@ -307,122 +302,166 @@
 //   )
 // }
 
-
-import React, { useEffect, useState } from 'react'
-import { useSupabaseClient } from '@supabase/auth-helpers-react'
-import { StorageFile } from '@supabase/storage-js'
-import { Database } from '../utils/database.types'
+import React, { useEffect, useState } from 'react';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { StorageFile } from '@supabase/storage-js';
+import { Database } from '../utils/database.types';
 import PageWrapper from '@/lib/pageWrapper';
 
-type Profiles = Database['public']['Tables']['profiles']['Row']
+type Profiles = Database['public']['Tables']['profiles']['Row'];
 
 export default function Files({
   uid,
-  onUpload,
+  onUpload
 }: {
-  uid: string
-  onUpload: (url: string) => void
+  uid: string;
+  onUpload: (url: string) => void;
 }) {
-  const supabase = useSupabaseClient()
-  const { storage } = useSupabaseClient()
-  const [files, setFiles] = useState<StorageFile[]>([])
-  const [uploading, setUploading] = useState(false)
-  const [imageUrl, setImageUrl] = useState('')
+  const supabase = useSupabaseClient();
+  const { storage } = useSupabaseClient();
+  const [files, setFiles] = useState<StorageFile[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
 
   useEffect(() => {
     async function fetchFiles() {
       try {
         const { data: files, error } = await supabase.storage
           .from('files')
-          .list(uid)
+          .list(uid);
 
         if (error) {
-          throw error
+          throw error;
         }
 
-        setFiles(files || [])
+        setFiles(files || []);
       } catch (error) {
-        console.log('Error fetching files: ', error)
+        console.log('Error fetching files: ', error);
       }
     }
 
-    fetchFiles()
-  }, [storage, uid])
+    fetchFiles();
+  }, [storage, uid]);
 
   const uploadFiles: React.ChangeEventHandler<HTMLInputElement> = async (
     event
   ) => {
     try {
-      setUploading(true)
+      setUploading(true);
 
       if (!event.target.files || event.target.files.length === 0) {
-        throw new Error('You must select a file to upload.')
+        throw new Error('You must select a file to upload.');
       }
 
-      const file = event.target.files[0]
-      const fileExt = file.name.split('.').pop()
-      const fileName = `${uid}.${fileExt}`
-      const filePath = `${fileName}`
+      const file = event.target.files[0];
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${uid}.${fileExt}`;
+      const filePath = `${fileName}`;
 
       let { error: uploadError } = await supabase.storage
         .from('files')
-        .upload(filePath, file, { upsert: false })
+        .upload(filePath, file, { upsert: false });
 
       if (uploadError) {
-        throw uploadError
+        throw uploadError;
       }
 
-      const { data } = supabase
-        .storage
-        .from('avatars')
-        .getPublicUrl(fileName)
-      setImageUrl(data.publicUrl)
+      const { data } = supabase.storage.from('avatars').getPublicUrl(fileName);
+      setImageUrl(data.publicUrl);
 
-      onUpload(filePath)
+      onUpload(filePath);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     } finally {
-      setUploading(false)
+      setUploading(false);
     }
-  }
+  };
 
   return (
     <PageWrapper allowedRoles={['student']}>
       <>
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse', border: '2px solid #9370DB' }}>
-        <thead>
-          <tr style={{ backgroundColor: '#9370DB' }}>
-            <th style={{ textAlign: 'center', padding: '10px', borderBottom: '1px solid white', color: 'white', borderRight: '2px solid white' }}>Health Documents</th>
-          </tr>
-        </thead>
-        <tbody>
-          {files.map((file) => (
-            <tr key={file.name} style={{ borderBottom: '1px solid #9370DB', backgroundColor: '#E6E6FA' }}>
-              <td style={{ padding: '10px', borderRight: '2px solid #9370DB', color: 'black' }}>{file.name}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-        <label
-          className="button primary"
-          htmlFor="single"
-          style={{ backgroundColor: '#9370DB', color: 'white', padding: '10px 20px', border: '2px solid #9370DB', cursor: 'pointer' }}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}
         >
-          {uploading ? 'Uploading ...' : 'Upload'}
-        </label>
-        <input
-          style={{ visibility: 'hidden', position: 'absolute' }}
-          type="file"
-          id="single"
-          accept="image/*"
-          onChange={uploadFiles}
-          disabled={uploading}
-        />
-      </div>
-    </div>
-    </>
+          <table
+            style={{
+              width: '100%',
+              borderCollapse: 'collapse',
+              border: '2px solid #9370DB'
+            }}
+          >
+            <thead>
+              <tr style={{ backgroundColor: '#9370DB' }}>
+                <th
+                  style={{
+                    textAlign: 'center',
+                    padding: '10px',
+                    borderBottom: '1px solid white',
+                    color: 'white',
+                    borderRight: '2px solid white'
+                  }}
+                >
+                  Health Documents
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {files.map((file) => (
+                <tr
+                  key={file.name}
+                  style={{
+                    borderBottom: '1px solid #9370DB',
+                    backgroundColor: '#E6E6FA'
+                  }}
+                >
+                  <td
+                    style={{
+                      padding: '10px',
+                      borderRight: '2px solid #9370DB',
+                      color: 'black'
+                    }}
+                  >
+                    {file.name}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: '20px'
+            }}
+          >
+            <label
+              className="button primary"
+              htmlFor="single"
+              style={{
+                backgroundColor: '#9370DB',
+                color: 'white',
+                padding: '10px 20px',
+                border: '2px solid #9370DB',
+                cursor: 'pointer'
+              }}
+            >
+              {uploading ? 'Uploading ...' : 'Upload'}
+            </label>
+            <input
+              style={{ visibility: 'hidden', position: 'absolute' }}
+              type="file"
+              id="single"
+              accept="image/*"
+              onChange={uploadFiles}
+              disabled={uploading}
+            />
+          </div>
+        </div>
+      </>
     </PageWrapper>
   );
-}  
+}

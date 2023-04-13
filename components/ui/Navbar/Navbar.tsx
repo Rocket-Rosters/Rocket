@@ -53,19 +53,19 @@ const Navbar = () => {
                 Account
               </Link>
               {user?.role === 'authenticated' && details?.role === 'admin' ? (
-              <Link href="/addcourse" className={s.link}>
-                Add Courses
-              </Link>
+                <Link href="/addcourse" className={s.link}>
+                  Add Courses
+                </Link>
               ) : null}
               {user?.role === 'authenticated' && details?.role === 'admin' ? (
-              <Link href="/addannouncements" className={s.link}>
-                Post Announcements
-              </Link>
+                <Link href="/addannouncements" className={s.link}>
+                  Post Announcements
+                </Link>
               ) : null}
               {user?.role === 'authenticated' && details?.role === 'admin' ? (
-              <Link href="/invitenewuser" className={s.link}>
-                Add Students
-              </Link>
+                <Link href="/invitenewuser" className={s.link}>
+                  Add Students
+                </Link>
               ) : null}
               {user?.role === 'authenticated' && details?.role === 'student' ? (
                 <Link href="/fileupload" className={s.link}>

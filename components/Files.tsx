@@ -1,68 +1,72 @@
-import React, { useEffect, useState } from 'react'
-import { useSupabaseClient } from '@supabase/auth-helpers-react'
-import { Database } from '../utils/database.types'
-type Profiles = Database['public']['Tables']['profiles']['Row']
+import React, { useEffect, useState } from 'react';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { Database } from '../utils/database.types';
+type Profiles = Database['public']['Tables']['profiles']['Row'];
 
 export default function Files({
   uid,
   url,
   size,
-  onUpload,
+  onUpload
 }: {
-  uid: string
-  url: string
-  size: number
-  onUpload: (url: string) => void
+  uid: string;
+  url: string;
+  size: number;
+  onUpload: (url: string) => void;
 }) {
-  const supabase = useSupabaseClient<Database>()
-  const [fileUrl, setFileUrl] = useState<Profiles['avatar_url']>(null)
-  const [uploading, setUploading] = useState(false)
+  const supabase = useSupabaseClient<Database>();
+  const [fileUrl, setFileUrl] = useState<Profiles['avatar_url']>(null);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     async function downloadImage(path: string) {
       try {
-        const { data, error } = await supabase.storage.from('files').download(path)
+        const { data, error } = await supabase.storage
+          .from('files')
+          .download(path);
         if (error) {
-          throw error
+          throw error;
         }
-        const url = URL.createObjectURL(data)
-        setFileUrl(url)
+        const url = URL.createObjectURL(data);
+        setFileUrl(url);
       } catch (error) {
-        console.log('Error downloading image: ', error)
+        console.log('Error downloading image: ', error);
       }
     }
 
-    if (url) downloadImage(url)
-  }, [url])
+    if (url) downloadImage(url);
+  }, [url]);
 
-  const uploadFiles: React.ChangeEventHandler<HTMLInputElement> = async (event) => {
+  const uploadFiles: React.ChangeEventHandler<HTMLInputElement> = async (
+    event
+  ) => {
     try {
-      setUploading(true)
+      setUploading(true);
 
       if (!event.target.files || event.target.files.length === 0) {
-        throw new Error('You must select an image to upload.')
+        throw new Error('You must select an image to upload.');
       }
 
-      const file = event.target.files[0]
-      const fileExt = file.name.split('.').pop()
-      const fileName = `${uid}.${fileExt}`
-      const filePath = `${fileName}`
+      const file = event.target.files[0];
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${uid}.${fileExt}`;
+      const filePath = `${fileName}`;
 
       let { error: uploadError } = await supabase.storage
         .from('files')
-        .upload(filePath, file, { upsert: false })
+        .upload(filePath, file, { upsert: false });
 
       if (uploadError) {
-        throw uploadError
+        throw uploadError;
       }
 
-      onUpload(filePath)
+      onUpload(filePath);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     } finally {
-      setUploading(false)
+      setUploading(false);
     }
-  }
+  };
 
   return (
     <div>
@@ -71,7 +75,7 @@ export default function Files({
           src={fileUrl}
           alt="File"
           className="file image"
-        //   style={{ height: size, width: size }}
+          //   style={{ height: size, width: size }}
         />
       ) : (
         <div className="file no-image" style={{ height: size, width: size }} />
@@ -83,7 +87,7 @@ export default function Files({
         <input
           style={{
             visibility: 'hidden',
-            position: 'absolute',
+            position: 'absolute'
           }}
           type="file"
           id="single"
@@ -93,6 +97,5 @@ export default function Files({
         />
       </div>
     </div>
-  )
+  );
 }
-

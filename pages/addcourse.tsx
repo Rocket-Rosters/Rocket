@@ -168,7 +168,6 @@ import { supabase } from '@/utils/supabase-client';
 import { v4 as uuidv4 } from 'uuid';
 import Button from '@/components/ui/Button';
 import PageWrapper from '@/lib/pageWrapper';
-// import { Card } from './Card';
 
 interface Props {
   title: string;
@@ -235,6 +234,17 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
           >
             End date
           </th>
+          <th style={{ border: '1px solid purple', padding: '10px' }}>
+            Attendance
+          </th>
+          {/* <th style={{ border: '1px solid purple', padding: '10px' }}>Students</th> */}
+          <th style={{ border: '1px solid purple', padding: '10px' }}>
+            Faculty
+          </th>
+          <th style={{ border: '1px solid purple', padding: '10px' }}>
+            Meeting Pattern
+          </th>
+
           <th
             style={{
               border: '1px solid purple',
@@ -248,6 +258,14 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
         </tr>
       </thead>
       <tbody>
+        {/* name text not null,
+    start_date date not null,
+    end_date date not null,
+    attendance jsonb null,
+    students array null,
+    faculty array null,
+    id uuid not null default uuid_generate_v4 (),
+    Meeting Pattern text null default 'M,TU,W,TH,F,SA,SU 12-1 am'::text, */}
         {courses.map((course: any) => (
           <tr key={course.id}>
             <td style={{ border: '1px solid purple', padding: '10px' }}>
@@ -258,6 +276,18 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
             </td>
             <td style={{ border: '1px solid purple', padding: '10px' }}>
               {course.end_date}
+            </td>
+            <td style={{ border: '1px solid purple', padding: '10px' }}>
+              {course.attendance}
+            </td>
+            {/* <td style={{ border: '1px solid purple', padding: '10px' }}>
+              {course.students}
+            </td> */}
+            <td style={{ border: '1px solid purple', padding: '10px' }}>
+              {course.faculty}
+            </td>
+            <td style={{ border: '1px solid purple', padding: '10px' }}>
+              {course.meeting_pattern}
             </td>
             <td style={{ border: '1px solid purple', padding: '10px' }}>
               <Button
@@ -292,6 +322,10 @@ const CoursesPage = () => {
   const [name, setName] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [faculty, setFaculty] = useState('');
+  const [attendance, setAttendance] = useState('');
+  const [students, setStudents] = useState('');
+  const [meetingPattern, setMeetingPattern] = useState('');
 
   useEffect(() => {
     fetchCourses();
@@ -439,6 +473,87 @@ const CoursesPage = () => {
                   }}
                 />
               </div>
+              <div style={{ marginBottom: '10px' }}>
+                <label
+                  htmlFor="attendance"
+                  style={{ color: '#9370DB', marginRight: '10px' }}
+                >
+                  Attendance:
+                </label>
+                <input
+                  type="text"
+                  id="attendance"
+                  value={attendance}
+                  onChange={(event) => setAttendance(event.target.value)}
+                  style={{
+                    color: 'black',
+                    padding: '5px',
+                    borderRadius: '5px',
+                    border: '1px solid white'
+                  }}
+                />
+              </div>
+              <div style={{ marginBottom: '10px' }}>
+                <label
+                  htmlFor="faculty"
+                  style={{ color: '#9370DB', marginRight: '10px' }}
+                >
+                  Faculty:
+                </label>
+                <input
+                  type="text"
+                  id="faculty"
+                  value={faculty}
+                  onChange={(event) => setFaculty(event.target.value)}
+                  style={{
+                    color: 'black',
+                    padding: '5px',
+                    borderRadius: '5px',
+                    border: '1px solid white'
+                  }}
+                />
+              </div>
+              <div style={{ marginBottom: '10px' }}>
+                <label
+                  htmlFor="students"
+                  style={{ color: '#9370DB', marginRight: '10px' }}
+                >
+                  Students:
+                </label>
+                <input
+                  type="text"
+                  id="students"
+                  value={students}
+                  onChange={(event) => setStudents(event.target.value)}
+                  style={{
+                    color: 'black',
+                    padding: '5px',
+                    borderRadius: '5px',
+                    border: '1px solid white'
+                  }}
+                />
+              </div>
+              <div style={{ marginBottom: '10px' }}>
+                <label
+                  htmlFor="Meeting Pattern"
+                  style={{ color: '#9370DB', marginRight: '10px' }}
+                >
+                  Meeting Pattern:
+                </label>
+                <input
+                  type="text"
+                  id="Meeting Pattern"
+                  value={meetingPattern}
+                  onChange={(event) => setMeetingPattern(event.target.value)}
+                  style={{
+                    color: 'black',
+                    padding: '5px',
+                    borderRadius: '5px',
+                    border: '1px solid white'
+                  }}
+                />
+              </div>
+
               <Button
                 type="submit"
                 style={{ padding: '10px', borderRadius: '5px', border: 'none' }}
@@ -462,3 +577,6 @@ const CoursesPage = () => {
 };
 
 export default CoursesPage;
+function setfaculty(value: string): void {
+  throw new Error('Function not implemented.');
+}
