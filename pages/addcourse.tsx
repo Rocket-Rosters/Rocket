@@ -365,7 +365,7 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
 const CoursesPage = () => {
   // i want to make a UUID usinf uuidv4
   const { v4: uuidv4 } = require('uuid');
-  let id = uuidv4();
+  const id = uuidv4();
   const [courses, setCourses] = useState([]);
   const [name, setName] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -374,6 +374,7 @@ const CoursesPage = () => {
   const [attendance, setAttendance] = useState('');
   const [students, setStudents] = useState('');
   const [meetingPattern, setMeetingPattern] = useState('');
+  // const id = uuidv4();
 
   useEffect(() => {
     fetchCourses();
@@ -419,8 +420,6 @@ const CoursesPage = () => {
   const handleCreate = async (event: any) => {
     event.preventDefault();
 
-    let id = uuidv4();
-
     const { data, error } = await supabase.from('courses').insert({
       id,
       name,
@@ -442,7 +441,7 @@ const CoursesPage = () => {
       setFaculty('');
       setStudents('');
       setMeetingPattern('');
-      id = uuidv4();
+      // id = uuidv4();
     }
 
     // for each faculty and student in the array insert new row into the enrollment table

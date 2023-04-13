@@ -243,7 +243,7 @@ export default function Avatar({ url, size = 150, onUpload, uid }: Props) {
       //@ts-ignore
       onUpload(filePath);
     } catch (error) {
-      alert(error.message);
+      // alert(error.message);
     } finally {
       setUploading(false);
     }

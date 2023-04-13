@@ -59,7 +59,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       user: session.user
     }
   };
-}
+};
 // this will use the user?.id to get the courses from the database table called enrollment
 // and then display them in a list
 
@@ -71,14 +71,15 @@ export default function FacultyCourses({ user }: { user: User }) {
   useEffect(() => {
     fetchCourses();
   }, []);
+  // store each course in the database in the courses array
 
   async function fetchCourses() {
     try {
       setLoading(true);
       const { data, error } = await supabase
         .from('enrollment')
-        .select('*')
-        .eq('profile_id', user?.id);
+        .select('course_id')
+        .eq('faculty_id', user?.id);
       if (error) throw error;
       setCourses(data);
     } catch (error) {
@@ -89,7 +90,7 @@ export default function FacultyCourses({ user }: { user: User }) {
   }
 
   return (
-    <PageWrapper children={undefined} allowedRoles={['faculty']}>
+    <PageWrapper allowedRoles={['faculty']}>
       <div className="flex flex-col items-center justify-center min-h-screen py-2">
         <Card title="Courses">
           <div className="flex flex-col items-center justify-center">
@@ -100,6 +101,10 @@ export default function FacultyCourses({ user }: { user: User }) {
                 {courses.map((course) => (
                   <div key={course.id} className="text-zinc-300">
                     {course.course_id}
+                    <br />
+                    {course.profile_id}
+                    <br />
+                    {course.role}
                   </div>
                 ))}
               </div>
@@ -109,5 +114,4 @@ export default function FacultyCourses({ user }: { user: User }) {
       </div>
     </PageWrapper>
   );
-
-} 
+}
