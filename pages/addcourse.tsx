@@ -235,14 +235,28 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
           >
             End date
           </th>
-          <th style={{ border: '1px solid purple', padding: '10px' }}>
+          {/* <th style={{ border: '1px solid purple', padding: '10px' }}>
             Attendance
-          </th>
+          </th> */}
           {/* <th style={{ border: '1px solid purple', padding: '10px' }}>Students</th> */}
-          <th style={{ border: '1px solid purple', padding: '10px' }}>
+          <th
+            style={{
+              border: '1px solid purple',
+              padding: '10px',
+              backgroundColor: '#9370DB',
+              color: 'white'
+            }}
+          >
             Faculty
           </th>
-          <th style={{ border: '1px solid purple', padding: '10px' }}>
+          <th
+            style={{
+              border: '1px solid purple',
+              padding: '10px',
+              backgroundColor: '#9370DB',
+              color: 'white'
+            }}
+          >
             Meeting Pattern
           </th>
 
@@ -278,9 +292,9 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
             <td style={{ border: '1px solid purple', padding: '10px' }}>
               {course.end_date}
             </td>
-            <td style={{ border: '1px solid purple', padding: '10px' }}>
+            {/* <td style={{ border: '1px solid purple', padding: '10px' }}>
               {course.attendance}
-            </td>
+            </td> */}
             {/* <td style={{ border: '1px solid purple', padding: '10px' }}>
               {course.students}
             </td> */}
@@ -288,7 +302,7 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
               {course.faculty}
             </td>
             <td style={{ border: '1px solid purple', padding: '10px' }}>
-              {course.meeting_pattern}
+              {course.meeting}
             </td>
             <td style={{ border: '1px solid purple', padding: '10px' }}>
               <Button
@@ -478,7 +492,7 @@ const CoursesPage = () => {
                   }}
                 />
               </div>
-              <div style={{ marginBottom: '10px' }}>
+              {/* <div style={{ marginBottom: '10px' }}>
                 <label
                   htmlFor="attendance"
                   style={{ color: '#9370DB', marginRight: '10px' }}
@@ -497,7 +511,7 @@ const CoursesPage = () => {
                     border: '1px solid white'
                   }}
                 />
-              </div>
+              </div> */}
               <div style={{ marginBottom: '10px' }}>
                 <label
                   htmlFor="faculty"
