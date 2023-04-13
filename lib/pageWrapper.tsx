@@ -17,7 +17,7 @@ export default function PageWrapper({ children, allowedRoles }: PageProps) {
 
   useEffect(() => {
     if (!user) {
-        return;
+      return;
     }
     const getUserDetails = () =>
       // @ts-ignore

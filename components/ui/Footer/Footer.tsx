@@ -14,12 +14,12 @@ export default function Footer() {
             href="/"
             className="flex flex-initial items-center font-bold md:mr-24"
           > */}
-            {/* <span className="rounded-full border border-zinc-700 mr-2"> */}
-              {/* <Logo /> */}
-              <img src="/IMG_2682-removebg.png" alt="Logo" width="130px"/>
-              {/* <img src="/RocketTransparent.png" alt="Logo" width="300px" height="200px"/> */}
-            {/* </span> */}
-            {/* <span>Rocket Rosters</span> */}
+          {/* <span className="rounded-full border border-zinc-700 mr-2"> */}
+          {/* <Logo /> */}
+          <img src="/IMG_2682-removebg.png" alt="Logo" width="130px" />
+          {/* <img src="/RocketTransparent.png" alt="Logo" width="300px" height="200px"/> */}
+          {/* </span> */}
+          {/* <span>Rocket Rosters</span> */}
           {/* </Link> */}
         </div>
         <div className="col-span-1 lg:col-span-2">

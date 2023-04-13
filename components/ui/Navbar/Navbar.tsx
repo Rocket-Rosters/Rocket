@@ -1,16 +1,38 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
-
+import { supabase } from '@/utils/supabase-client';
 import Logo from '@/components/icons/Logo';
 import { useUser } from '@/utils/useUser';
 
 import s from './Navbar.module.css';
+import { useEffect, useState } from 'react';
+
+type User = {
+  data: any;
+};
 
 const Navbar = () => {
   const router = useRouter();
   const supabaseClient = useSupabaseClient();
   const { user } = useUser();
+  const [details, setDetails] = useState<any>(null);
+
+  useEffect(() => {
+    const getUserDetails = async () => {
+      if (!user) return;
+
+      const { data } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      setDetails(data);
+    };
+
+    getUserDetails();
+  }, [details, user]);
 
   return (
     <nav className={s.root}>
@@ -34,11 +56,7 @@ const Navbar = () => {
           </div>
           {/* @ts-ignore */}
           <div className="flex flex-1 justify-center items-center">
-            {console.log('hey')}
-            {console.log(user)}
-            {console.log(user?.role)}
-
-            {user?.role === 'authenticated' ? (
+            {user?.role === 'authenticated' && details?.role === 'admin' ? (
               <Link href="/admin" className={s.link}>
                 Admin
               </Link>
