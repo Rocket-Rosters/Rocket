@@ -113,6 +113,7 @@ export default function FacultyCourses({ user }: { user: User }) {
     const fetchData = async () => {
       await fetchCourses();
       await fetchCourseStudents();
+      await fetchCourseName();
     };
     fetchData();
   }, []);
@@ -156,6 +157,33 @@ export default function FacultyCourses({ user }: { user: User }) {
     }
   }
 
+  // async function fetchCourseName() {
+  //   try {
+  //     setLoading(true);
+  //     const { data, error: any } = await supabase
+  //       .from('courses')
+  //       .select('name')
+  //       .eq('id', courses);
+  //     if (error) throw error;
+  //     setCourseName(data);
+  //     console.log('course name:', data);
+  //   } catch (error) {
+  //     setError(error.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
+  const fetchCourseName = async () => {
+    const { data, error } = await supabase.from('courses').select('*');
+
+    if (error) {
+      console.error(error);
+    } else {
+      setCourses(data);
+    }
+  };
+
+
   return (
     <PageWrapper allowedRoles={['faculty']}>
       <div className="flex flex-col items-center justify-center min-h-screen py-2">
@@ -168,7 +196,7 @@ export default function FacultyCourses({ user }: { user: User }) {
                 {courses.map((course: any) => (
                   <div key={course.id}>
                     <Card title="" footer=<Button>Take Attendence</Button>>
-                      <div className="text-zinc-300">{course.course_id}</div>
+                      <div className="text-zinc-300">{course.name}</div>
                       {/* <div className="text-zinc-300">{fetchCourseName(course.course_id)}</div> */}
                     </Card>
                   </div>
