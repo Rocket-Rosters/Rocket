@@ -234,6 +234,7 @@ export default function Account({ user }: { user: User }) {
     if (error) {
       console.log(error);
     }
+    alert(' 👤 Congrats! Your profile has been updated! 👤');
   };
 
   return (
