@@ -22,7 +22,7 @@ const Space: FC = () => {
             transform: translateY(0px);
           }
           to {
-            transform: translate(-2000px);
+            transform: translate(-1000px);
           }
         }
 
@@ -36,11 +36,10 @@ const Space: FC = () => {
         #stars2,
         #stars3 {
           position: absolute;
-          top: 0;
+          top: -1700px;
           left: 0;
           bottom: 0;
           right: 0;
-          margin: auto;
           width: 1px;
           height: 1px;
           background: transparent;
@@ -66,7 +65,8 @@ const Space: FC = () => {
         #stars3::after {
           content: ' ';
           position: absolute;
-          top: 2000px;
+          top: 200px;
+          bottom: 0px;
           width: 1px;
           height: 1px;
           background: transparent;
@@ -90,7 +90,7 @@ const Space: FC = () => {
 
         #title {
           position: absolute;
-          top: 50%;
+          top: 48%;
           left: 0;
           right: 0;
           margin-top: -60px;
@@ -107,6 +107,11 @@ const Space: FC = () => {
           background: -webkit-linear-gradient(white, #38495a);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
+          padding: 20px;
+        }
+
+        span {
+          padding: 20px;
         }
       `}</style>
       <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet" type = "text/css" />
