@@ -3,9 +3,13 @@ import { FC } from 'react';
 const Space: FC = () => {
   // n is number of stars required
   const multipleBoxShadow = (n: number): string => {
-    let value = `${Math.floor(Math.random() * 2000)}px ${Math.floor(Math.random() * 2000)}px #FFF`;
+    let value = `${Math.floor(Math.random() * 2000)}px ${Math.floor(
+      Math.random() * 2000
+    )}px #FFF`;
     for (let i = 2; i <= n; i++) {
-      value += `, ${Math.floor(Math.random() * 2000)}px ${Math.floor(Math.random() * 2000)}px #FFF`;
+      value += `, ${Math.floor(Math.random() * 2000)}px ${Math.floor(
+        Math.random() * 2000
+      )}px #FFF`;
     }
     return value;
   };
@@ -28,7 +32,11 @@ const Space: FC = () => {
 
         html {
           height: 2%;
-          background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+          background: radial-gradient(
+            ellipse at bottom,
+            #1b2735 0%,
+            #090a0f 100%
+          );
           overflow: hidden;
         }
 
@@ -114,17 +122,19 @@ const Space: FC = () => {
           padding: 20px;
         }
       `}</style>
-      <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet" type = "text/css" />
-        <div id="stars" />
-        <div id="stars2" />
-        <div id="stars3" />
-        <div id="title">
-            <span>Rocket Rosters</span>
-        </div>
+      <link
+        href="https://fonts.googleapis.com/css?family=Lato:300,400,700"
+        rel="stylesheet"
+        type="text/css"
+      />
+      <div id="stars" />
+      <div id="stars2" />
+      <div id="stars3" />
+      <div id="title">
+        <span>Rocket Rosters</span>
+      </div>
     </>
-    );
+  );
 };
 
 export default Space;
-
-

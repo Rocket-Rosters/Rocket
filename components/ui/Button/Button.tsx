@@ -1,5 +1,11 @@
 import cn from 'classnames';
-import React, { forwardRef, useRef, ButtonHTMLAttributes, useState, useEffect } from 'react';
+import React, {
+  forwardRef,
+  useRef,
+  ButtonHTMLAttributes,
+  useState,
+  useEffect
+} from 'react';
 import { mergeRefs } from 'react-merge-refs';
 
 import LoadingDots from '@/components/ui/LoadingDots';
@@ -45,8 +51,6 @@ const Button = forwardRef<HTMLButtonElement, Props>((props, buttonRef) => {
     setShimmer(true);
     return () => clearTimeout(timeout);
   }, []);
-
-
 
   const ref = useRef(null);
   const rootClassName = cn(

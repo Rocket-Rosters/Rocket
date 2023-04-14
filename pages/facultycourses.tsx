@@ -25,30 +25,84 @@ interface Props {
   children: ReactNode;
 }
 // make a component called Popup that will make a popup when the user clicks button, When they click the background the popup will close
+function CoursesTable({ courseStudents }: any) {
+  return (
+    <table
+      style={{
+        margin: 'auto',
+        borderCollapse: 'collapse',
+        border: '2px solid black',
+        backgroundColor: '#E6E6FA',
+        color: 'black',
+        fontSize: '14px'
+      }}
+    >
+      <thead>
+        <tr>
+          <th
+            style={{
+              border: '1px solid purple',
+              padding: '10px',
+              backgroundColor: '#9370DB',
+              color: 'white',
+              fontSize: '14px'
+            }}
+          >
+            Student Name
+          </th>
+          <th
+            style={{
+              border: '1px solid purple',
+              padding: '10px',
+              backgroundColor: '#9370DB',
+              color: 'white',
+              fontSize: '14px'
+            }}
+          >
+            Status
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+      {courseStudents.map((course: any) => (
+          <tr key={course.id}>
+            <td
+              style={{
+                border: '1px solid purple',
+                padding: '10px',
+                fontSize: '14px'
+              }}
+            >
+              {course.full_name}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
 
 //@ts-ignore
-function Popup({ showPopup, setShowPopup }) {
-  const handleBackgroundClick = () => {
+function Popup({ showPopup, setShowPopup, courseStudents }) {
+  const handleXButtonClick = () => {
     setShowPopup(false);
   }
 
   return (
     <div
       className={`${showPopup ? 'block' : 'hidden'} fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 z-30`}
-      onClick={handleBackgroundClick}
     >
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2 bg-gray-800 rounded-md shadow-lg" style={{ backgroundColor: 'rgba(0, 0, 0, 0.9)' }}>
         <div className="p-4">
-          <h1 className="text-xl font-bold mb-2 text-white">Popup Title</h1>
-          <p className="text-gray-300">This is some text inside the popup window.</p>
+          <h1 className="text-xl font-bold mb-2 text-white">Attendance</h1>
+          <p className="text-gray-300">Student List</p>
           <Card
-            title="Course Name"
+            title=""
             description=""
-            footer={<p></p>}
+            footer={<p><button className="close-button" onClick={handleXButtonClick}>Close</button></p>}
           >
+            <CoursesTable courseStudents={courseStudents}/>
             <p className="text-xl mt-8 mb-4 font-semibold text-white">
-              {/* display the user's full_name in this field from account */}
-              adasdasdasdasdasdasdasd
             </p>
           </Card>
         </div>
@@ -56,11 +110,6 @@ function Popup({ showPopup, setShowPopup }) {
     </div>
   );
 }
-
-
-
-
-
 
 function Card({ title, description, footer, children }: Props) {
   return (
@@ -108,6 +157,7 @@ export default function FacultyCourses({ user }: { user: User }) {
   const [courseName, setCourseName] = useState([]);
   const [courseStudents, setCourseStudents] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
+  const [courseId, setCourseId] = useState(0);
  
   useEffect(() => {
     const fetchData = async () => {
@@ -120,6 +170,7 @@ export default function FacultyCourses({ user }: { user: User }) {
   
   // store each course in the database in the courses array
 
+  
   async function fetchCourses() {
     try {
       setLoading(true);
@@ -145,7 +196,7 @@ export default function FacultyCourses({ user }: { user: User }) {
         const { data, error: any } = await supabase
           .from('enrollment')
           .select('*')
-          .eq('course_id', courses[0].course_id); // assuming you want to fetch students for the first course in the list
+          .eq('course_id', courseId); // assuming you want to fetch students for the first course in the list
         if (error) throw error;
         console.log('course of students:', data);
         setCourseStudents(data);
@@ -157,24 +208,18 @@ export default function FacultyCourses({ user }: { user: User }) {
     }
   }
 
-  // async function fetchCourseName() {
-  //   try {
-  //     setLoading(true);
-  //     const { data, error: any } = await supabase
-  //       .from('courses')
-  //       .select('name')
-  //       .eq('id', courses);
-  //     if (error) throw error;
-  //     setCourseName(data);
-  //     console.log('course name:', data);
-  //   } catch (error) {
-  //     setError(error.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
   const fetchCourseName = async () => {
     const { data, error } = await supabase.from('courses').select('*');
+
+    if (error) {
+      console.error(error);
+    } else {
+      setCourses(data);
+    }
+  };
+
+  const fetchStudentName = async () => {
+    const { data, error } = await supabase.from('profiles').select('*');
 
     if (error) {
       console.error(error);
@@ -196,9 +241,8 @@ export default function FacultyCourses({ user }: { user: User }) {
               <>
                 {courses.map((course: any) => (
                   <div key={course.id}>
-                    <Card title="" footer=<Button>Take Attendence</Button>>
+                    <Card title="" footer={<Button onClick={() => setCourseId(course.id)}>Select Course</Button>}>
                       <div className="text-zinc-300">{course.name}</div>
-                      {/* <div className="text-zinc-300">{fetchCourseName(course.course_id)}</div> */}
                     </Card>
                   </div>
                 ))}
@@ -211,7 +255,6 @@ export default function FacultyCourses({ user }: { user: User }) {
               <Button
                 onClick={() => {
                   fetchCourses();
-                  fetchCourseStudents();
                   fetchCourseName();
                 }}
               >
@@ -235,35 +278,17 @@ export default function FacultyCourses({ user }: { user: User }) {
             {error && <div className="text-zinc-300">{error}</div>}
 
             <div className="flex items-center justify-center mt-4 space-x-4">
-              <Button
-                onClick={() => {
-                  fetchCourses();
-                }}
-              >
-                Refresh Courses
-              </Button>
               {/* make a button that will make the popwimdow and in it say hello world */}
               <Button
                 onClick={() => {
+                  fetchCourseStudents();
                   setShowPopup(true);
                 }}
               >
                 Take Attendence
               </Button>
               
-              <Popup showPopup={showPopup} setShowPopup={setShowPopup} />
-
-              
-              
-
-                
-
-
-
-              
-
-               
-              
+              <Popup showPopup={showPopup} setShowPopup={setShowPopup} courseStudents={courseStudents}/>
             </div>
           </div>
         </Card>
