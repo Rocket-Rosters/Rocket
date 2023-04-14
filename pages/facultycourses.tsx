@@ -1,4 +1,3 @@
-
 import React, {
   useState,
   useEffect,
@@ -35,7 +34,10 @@ function CoursesTable({
   courseStudents: any[] | null | undefined;
   course_id: string;
 }) {
-  function filterStudentsByCourseId(course_id: string, courseStudents: any[] | null | undefined) {
+  function filterStudentsByCourseId(
+    course_id: string,
+    courseStudents: any[] | null | undefined
+  ) {
     if (!courseStudents) {
       return [];
     }
@@ -47,7 +49,6 @@ function CoursesTable({
   }
 
   const filteredStudents = filterStudentsByCourseId(course_id, courseStudents);
-
 
   return (
     <table
@@ -84,8 +85,20 @@ function CoursesTable({
           >
             Status
           </th>
+          <th
+            style={{
+              border: '1px solid purple',
+              padding: '10px',
+              backgroundColor: '#9370DB',
+              color: 'white',
+              fontSize: '14px'
+            }}
+          >
+            Status Update
+          </th>
         </tr>
       </thead>
+      {/* body */}
       <tbody>
         {filteredStudents.map((student: any) => (
           <tr key={student.id}>
@@ -107,13 +120,49 @@ function CoursesTable({
             >
               {student.role}
             </td>
+            <td
+  style={{
+    border: '1px solid purple',
+    padding: '10px',
+    fontSize: '14px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: '0 auto',
+  }}
+>
+  <Button
+    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    onClick={() => {
+      console.log('clicked');
+    }}
+  >
+    Present
+  </Button>
+  <Button
+    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    onClick={() => {
+      console.log('clicked');
+    }}
+  >
+    Absent
+  </Button>
+  <Button
+    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    onClick={() => {
+      console.log('clicked');
+    }}
+  >
+    Tardy
+  </Button>
+</td>
+
+
           </tr>
         ))}
       </tbody>
     </table>
   );
 }
-
 
 //@ts-ignore
 function Popup({ showPopup, setShowPopup, courseStudents, course_id }) {
@@ -204,7 +253,6 @@ export default function FacultyCourses({ user }: { user: User }) {
   const [courseStudents, setCourseStudents] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [courseId, setCourseId] = useState(0);
-  
 
   useEffect(() => {
     const fetchData = async () => {

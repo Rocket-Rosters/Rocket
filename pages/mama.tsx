@@ -1,51 +1,38 @@
-import React from 'react';
-import styled from 'styled-components';
+import { useState, ReactNode, useEffect, SetStateAction } from 'react';
+import Link from 'next/link';
+import { GetServerSidePropsContext } from 'next';
+import {
+  createServerSupabaseClient,
+  User
+} from '@supabase/auth-helpers-nextjs';
+import LoadingDots from '@/components/ui/LoadingDots';
+import Button from '@/components/ui/Button';
+import { useUser } from '@/utils/useUser';
+import { postData } from '@/utils/helpers';
+import { supabase } from '@/utils/supabase-client';
+import { json } from 'stream/consumers';
+import PageWrapper from '@/lib/pageWrapper';
+import Dropdown from '@/components/ui/Dropdown';
+const options: any = [
+  { value: 'option1', label: 'Here' },
+  { value: 'option2', label: 'Absent' },
+  { value: 'option3', label: 'Late' },
+];
 
-const Container = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  align-content: center;
-  align-items: center;
-`;
+function DropdownPage() {
+  const [selectedOption, setSelectedOption] = useState(null);
 
-const Title = styled.h1`
-  color: #fff;
-  text-align: center;
-  font-size: 40px;
-  letter-spacing: 4px;
-  padding-left: 4px;
-`;
+  function handleSelect(option: SetStateAction<null>) {
+    setSelectedOption(option);
+  }
 
-const Planet = styled.div`
-  width: 700px;
-  height: 700px;
-  border-radius: 50%;
-  background-color: #000403;
-  position: absolute;
-  bottom: -567px;
-  left: 50%;
-  margin-left: -350px;
-  box-shadow: inset 8px 2px 10px #ede;
-  z-index: 2;
-`;
-
-const ExampleComponent = () => {
   return (
-    <Container>
-      <div id="d1">
-        <div id="d2">
-          <div id="d3"></div>
-        </div>
-      </div>
-      <div id="content">
-        <Title>THE ASTRONAUT</Title>
-      </div>
-      <Planet id="planet"></Planet>
-    </Container>
+    <div>
+      <h1>Dropdown Example</h1>
+      <Dropdown options={options} onSelect={handleSelect} />
+      {selectedOption && <p>You selected {selectedOption.label}.</p>}
+    </div>
   );
-};
+}
 
-export default ExampleComponent;
+export default DropdownPage;
