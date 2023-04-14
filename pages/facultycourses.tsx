@@ -1,10 +1,11 @@
-import {
+import React, {
   useState,
   useEffect,
   ReactNode,
   createContext,
   useContext
 } from 'react';
+
 import { supabase } from '@/utils/supabase-client';
 import Button from '@/components/ui/Button';
 import PageWrapper from '@/lib/pageWrapper';
@@ -22,10 +23,20 @@ interface Props {
   title: string;
   description?: string;
   footer?: ReactNode;
-  children: ReactNode;
+  children?: ReactNode;
 }
 // make a component called Popup that will make a popup when the user clicks button, When they click the background the popup will close
-function CoursesTable({ courseStudents }: any) {
+
+function CoursesTable({
+  courseStudents,
+  course_id
+}: {
+  courseStudents: any;
+  course_id: string;
+}) {
+  const filteredStudents = courseStudents.filter((student: any) => {
+    return student.role === 'student' && student.course_id === course_id;
+  });
   return (
     <table
       style={{
@@ -64,8 +75,8 @@ function CoursesTable({ courseStudents }: any) {
         </tr>
       </thead>
       <tbody>
-      {courseStudents.map((course: any) => (
-          <tr key={course.id}>
+        {filteredStudents.map((student: any) => (
+          <tr key={student.id}>
             <td
               style={{
                 border: '1px solid purple',
@@ -73,7 +84,16 @@ function CoursesTable({ courseStudents }: any) {
                 fontSize: '14px'
               }}
             >
-              {course.full_name}
+              {student.profile_id}
+            </td>
+            <td
+              style={{
+                border: '1px solid purple',
+                padding: '10px',
+                fontSize: '14px'
+              }}
+            >
+              {student.role}
             </td>
           </tr>
         ))}
@@ -83,27 +103,40 @@ function CoursesTable({ courseStudents }: any) {
 }
 
 //@ts-ignore
-function Popup({ showPopup, setShowPopup, courseStudents }) {
+function Popup({ showPopup, setShowPopup, courseStudents, course_id }) {
   const handleXButtonClick = () => {
     setShowPopup(false);
-  }
+  };
 
   return (
     <div
-      className={`${showPopup ? 'block' : 'hidden'} fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 z-30`}
+      className={`${
+        showPopup ? 'block' : 'hidden'
+      } fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 z-30`}
     >
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2 bg-gray-800 rounded-md shadow-lg" style={{ backgroundColor: 'rgba(0, 0, 0, 0.9)' }}>
+      <div
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2 bg-gray-800 rounded-md shadow-lg"
+        style={{ backgroundColor: 'rgba(0, 0, 0, 0.9)' }}
+      >
         <div className="p-4">
           <h1 className="text-xl font-bold mb-2 text-white">Attendance</h1>
           <p className="text-gray-300">Student List</p>
           <Card
             title=""
             description=""
-            footer={<p><button className="close-button" onClick={handleXButtonClick}>Close</button></p>}
+            footer={
+              <p>
+                <button className="close-button" onClick={handleXButtonClick}>
+                  Close
+                </button>
+              </p>
+            }
           >
-            <CoursesTable courseStudents={courseStudents}/>
-            <p className="text-xl mt-8 mb-4 font-semibold text-white">
-            </p>
+            <CoursesTable
+              courseStudents={courseStudents}
+              course_id={course_id}
+            />
+            <p className="text-xl mt-8 mb-4 font-semibold text-white"></p>
           </Card>
         </div>
       </div>
@@ -158,7 +191,7 @@ export default function FacultyCourses({ user }: { user: User }) {
   const [courseStudents, setCourseStudents] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [courseId, setCourseId] = useState(0);
- 
+
   useEffect(() => {
     const fetchData = async () => {
       await fetchCourses();
@@ -167,10 +200,9 @@ export default function FacultyCourses({ user }: { user: User }) {
     };
     fetchData();
   }, []);
-  
+
   // store each course in the database in the courses array
 
-  
   async function fetchCourses() {
     try {
       setLoading(true);
@@ -228,26 +260,32 @@ export default function FacultyCourses({ user }: { user: User }) {
     }
   };
 
-
   return (
     <PageWrapper allowedRoles={['faculty']}>
       <div className="flex flex-col items-center justify-center min-h-screen py-2">
         <Card title="Courses">
           <div className="flex flex-col items-center justify-center">
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-            {loading ? (
-              <div className="text-zinc-300">Loading...</div>
-            ) : (
-              <>
-                {courses.map((course: any) => (
-                  <div key={course.id}>
-                    <Card title="" footer={<Button onClick={() => setCourseId(course.id)}>Select Course</Button>}>
-                      <div className="text-zinc-300">{course.name}</div>
-                    </Card>
-                  </div>
-                ))}
-              </>
-            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {loading ? (
+                <div className="text-zinc-300">Loading...</div>
+              ) : (
+                <>
+                  {courses.map((course: any) => (
+                    <div key={course.id}>
+                      <Card
+                        title=""
+                        footer={
+                          <Button onClick={() => setCourseId(course.id)}>
+                            Select Course
+                          </Button>
+                        }
+                      >
+                        <div className="text-zinc-300">{course.name}</div>
+                      </Card>
+                    </div>
+                  ))}
+                </>
+              )}
             </div>
             {error && <div className="text-zinc-300">{error}</div>}
 
@@ -287,8 +325,13 @@ export default function FacultyCourses({ user }: { user: User }) {
               >
                 Take Attendence
               </Button>
-              
-              <Popup showPopup={showPopup} setShowPopup={setShowPopup} courseStudents={courseStudents}/>
+
+              <Popup
+                showPopup={showPopup}
+                setShowPopup={setShowPopup}
+                courseStudents={courseStudents}
+                course_id={courseId}
+              />
             </div>
           </div>
         </Card>
