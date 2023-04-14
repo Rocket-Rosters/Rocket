@@ -156,6 +156,7 @@ import { supabase } from '../utils/supabase-client';
 import { UserContextProvider } from '@supabase/auth-ui-react/dist/components/Auth/UserContext';
 import { ProfileContext } from '@/utils/useProfiles';
 import { useUser } from '@supabase/auth-helpers-react';
+import Button from '@/components/ui/Button';
 
 interface CardProps {
   title: string;

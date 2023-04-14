@@ -30,3 +30,36 @@
   -webkit-perspective: 1000;
   -webkit-backface-visibility: hidden;
 }
+/* my bs  */
+/* I want to add a shimmer effect in this css  */
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    #b195c1df 0%,
+    #37105192 45%,
+    #57476000 55%
+  );
+  background-size: 400% 400%;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 75%;
+  }
+  25% {
+    background-position: 50% 75%;
+  }
+  50% {
+    background-position: 25% 50%;
+  }
+  75% {
+    background-position: 10% 25%;
+  }
+  100% {
+    background-position: 0% 10%;
+  }
+}
+
+

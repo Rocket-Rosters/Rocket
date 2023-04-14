@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import React, { forwardRef, useRef, ButtonHTMLAttributes } from 'react';
+import React, { forwardRef, useRef, ButtonHTMLAttributes, useState, useEffect } from 'react';
 import { mergeRefs } from 'react-merge-refs';
 
 import LoadingDots from '@/components/ui/LoadingDots';
@@ -27,13 +27,36 @@ const Button = forwardRef<HTMLButtonElement, Props>((props, buttonRef) => {
     Component = 'button',
     ...rest
   } = props;
+
+  const [shining, setShining] = useState(false);
+  const [shimmer, setShimmer] = useState(false);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setShining(false);
+    }, 1000);
+    setShining(true);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setShimmer(false);
+    }, 1200);
+    setShimmer(true);
+    return () => clearTimeout(timeout);
+  }, []);
+
+
+
   const ref = useRef(null);
   const rootClassName = cn(
     styles.root,
     {
       [styles.slim]: variant === 'slim',
       [styles.loading]: loading,
-      [styles.disabled]: disabled
+      [styles.disabled]: disabled,
+      [styles.shining]: shining,
+      [styles.shimmer]: shimmer
     },
     className
   );

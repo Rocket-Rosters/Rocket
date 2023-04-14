@@ -6,16 +6,17 @@ import {
   useContext
 } from 'react';
 import { supabase } from '@/utils/supabase-client';
-import { v4 as uuidv4 } from 'uuid';
 import Button from '@/components/ui/Button';
 import PageWrapper from '@/lib/pageWrapper';
-import Search, { facultyId, studentId } from './test';
 import { GetServerSidePropsContext } from 'next';
 import {
   createServerSupabaseClient,
   User
 } from '@supabase/auth-helpers-nextjs';
-import { useUser } from '@supabase/auth-helpers-react';
+import CourseDetails from './course/[courseId]';
+import CoursesPage from './addcourse';
+import { userAgent } from 'next/server';
+// import { useUser } from '@supabase/auth-helpers-react';
 
 interface Props {
   title: string;
@@ -23,6 +24,43 @@ interface Props {
   footer?: ReactNode;
   children: ReactNode;
 }
+// make a component called Popup that will make a popup when the user clicks button, When they click the background the popup will close
+
+//@ts-ignore
+function Popup({ showPopup, setShowPopup }) {
+  const handleBackgroundClick = () => {
+    setShowPopup(false);
+  }
+
+  return (
+    <div
+      className={`${showPopup ? 'block' : 'hidden'} fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 z-30`}
+      onClick={handleBackgroundClick}
+    >
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2 bg-gray-800 rounded-md shadow-lg" style={{ backgroundColor: 'rgba(0, 0, 0, 0.9)' }}>
+        <div className="p-4">
+          <h1 className="text-xl font-bold mb-2 text-white">Popup Title</h1>
+          <p className="text-gray-300">This is some text inside the popup window.</p>
+          <Card
+            title="Course Name"
+            description=""
+            footer={<p></p>}
+          >
+            <p className="text-xl mt-8 mb-4 font-semibold text-white">
+              {/* display the user's full_name in this field from account */}
+              adasdasdasdasdasdasdasd
+            </p>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
+
+
 
 function Card({ title, description, footer, children }: Props) {
   return (
@@ -68,49 +106,55 @@ export default function FacultyCourses({ user }: { user: User }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [courseName, setCourseName] = useState([]);
-
+  const [courseStudents, setCourseStudents] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+ 
   useEffect(() => {
-    fetchCourses();
+    const fetchData = async () => {
+      await fetchCourses();
+      await fetchCourseStudents();
+    };
+    fetchData();
   }, []);
+  
   // store each course in the database in the courses array
 
   async function fetchCourses() {
     try {
       setLoading(true);
-      const { data, error: any  } = await supabase
+      const { data, error: any } = await supabase
         .from('enrollment')
         .select('*')
         .eq('profile_id', user?.id);
       if (error) throw error;
       setCourses(data);
-      
-      console.log("courses:", data);
+
+      console.log('courses:', data);
     } catch (error) {
       setError(error.message);
     } finally {
       setLoading(false);
     }
   }
-  // this will take teh data from fetchcourses and then use the ids to then index the course table 
-  // and then display the course name
-  async function fetchCourseName(id:any) {
+  // based in the course id, get the students in the course
+  async function fetchCourseStudents() {
     try {
       setLoading(true);
-      const { data, error: any  } = await supabase
-        .from('course')
-        .select('*')
-        .eq('id', id);
-      if (error) throw error;
-      setCourseName(data);
-
-      console.log("course name:", data);
+      if (courses.length > 0) {
+        const { data, error: any } = await supabase
+          .from('enrollment')
+          .select('*')
+          .eq('course_id', courses[0].course_id); // assuming you want to fetch students for the first course in the list
+        if (error) throw error;
+        console.log('course of students:', data);
+        setCourseStudents(data);
+      }
     } catch (error) {
       setError(error.message);
     } finally {
       setLoading(false);
     }
   }
-
 
   return (
     <PageWrapper allowedRoles={['faculty']}>
@@ -125,46 +169,74 @@ export default function FacultyCourses({ user }: { user: User }) {
                   <div key={course.id}>
                     <Card title="" footer=<Button>Take Attendence</Button>>
                       <div className="text-zinc-300">{course.course_id}</div>
+                      {/* <div className="text-zinc-300">{fetchCourseName(course.course_id)}</div> */}
                     </Card>
                   </div>
                 ))}
               </>
             )}
-  
+
             {error && <div className="text-zinc-300">{error}</div>}
-  
+
             <div className="flex items-center justify-center mt-4 space-x-4">
               <Button
-                size="small"
                 onClick={() => {
                   fetchCourses();
                 }}
               >
                 Refresh Courses
               </Button>
-  
-              {courses.length > 0 && (
-                <Button
-                  size="small"
-                  onClick={() => {
-                    fetchCourseName(courses[0].course_id);
-                  }}
-                >
-                  Refresh Course Name
-                </Button>
-              )}
+            </div>
+          </div>
+        </Card>
+        <Card title="Attendence">
+          <div className="flex flex-col items-center justify-center">
+            {loading ? (
+              <div className="text-zinc-300">Loading...</div>
+            ) : (
+              <>
+                {courses.map((course: any) => (
+                  <div key={course.id}></div>
+                ))}
+              </>
+            )}
+
+            {error && <div className="text-zinc-300">{error}</div>}
+
+            <div className="flex items-center justify-center mt-4 space-x-4">
+              <Button
+                onClick={() => {
+                  fetchCourses();
+                }}
+              >
+                Refresh Courses
+              </Button>
+              {/* make a button that will make the popwimdow and in it say hello world */}
+              <Button
+                onClick={() => {
+                  setShowPopup(true);
+                }}
+              >
+                Take Attendence
+              </Button>
+              
+              <Popup showPopup={showPopup} setShowPopup={setShowPopup} />
+
+              
+              
+
+                
+
+
+
+              
+
+               
+              
             </div>
           </div>
         </Card>
       </div>
     </PageWrapper>
   );
-
 }
-
-
-
-
-
-
-
