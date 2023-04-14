@@ -98,7 +98,7 @@ const Space: FC = () => {
           color: #fff;
           text-align: center;
           font-family: 'Lato', sans-serif;
-          font-weight: 300;
+          font-weight: 600;
           font-size: 50px;
           letter-spacing: 10px;
         }
