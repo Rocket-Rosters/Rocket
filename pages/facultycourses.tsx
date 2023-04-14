@@ -1,3 +1,4 @@
+
 import React, {
   useState,
   useEffect,
@@ -31,12 +32,23 @@ function CoursesTable({
   courseStudents,
   course_id
 }: {
-  courseStudents: any;
+  courseStudents: any[] | null | undefined;
   course_id: string;
 }) {
-  const filteredStudents = courseStudents.filter((student: any) => {
-    return student.role === 'student' && student.course_id === course_id;
-  });
+  function filterStudentsByCourseId(course_id: string, courseStudents: any[] | null | undefined) {
+    if (!courseStudents) {
+      return [];
+    }
+
+    const filteredStudents = courseStudents.filter((student: any) => {
+      return student.role === 'student' && student.course_id === course_id;
+    });
+    return filteredStudents;
+  }
+
+  const filteredStudents = filterStudentsByCourseId(course_id, courseStudents);
+
+
   return (
     <table
       style={{
@@ -101,6 +113,7 @@ function CoursesTable({
     </table>
   );
 }
+
 
 //@ts-ignore
 function Popup({ showPopup, setShowPopup, courseStudents, course_id }) {
@@ -191,6 +204,7 @@ export default function FacultyCourses({ user }: { user: User }) {
   const [courseStudents, setCourseStudents] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [courseId, setCourseId] = useState(0);
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -231,9 +245,13 @@ export default function FacultyCourses({ user }: { user: User }) {
           .eq('course_id', courseId); // assuming you want to fetch students for the first course in the list
         if (error) throw error;
         console.log('course of students:', data);
+        //@ts-ignore
         setCourseStudents(data);
+        //@ts-ignore
+        setCourseName(data.name);
       }
     } catch (error) {
+      //@ts-ignore
       setError(error.message);
     } finally {
       setLoading(false);
