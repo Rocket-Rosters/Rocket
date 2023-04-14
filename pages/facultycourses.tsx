@@ -211,6 +211,8 @@ export default function FacultyCourses({ user }: { user: User }) {
               <Button
                 onClick={() => {
                   fetchCourses();
+                  fetchCourseStudents();
+                  fetchCourseName();
                 }}
               >
                 Refresh Courses
