@@ -189,6 +189,7 @@ export default function FacultyCourses({ user }: { user: User }) {
       <div className="flex flex-col items-center justify-center min-h-screen py-2">
         <Card title="Courses">
           <div className="flex flex-col items-center justify-center">
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
             {loading ? (
               <div className="text-zinc-300">Loading...</div>
             ) : (
@@ -203,7 +204,7 @@ export default function FacultyCourses({ user }: { user: User }) {
                 ))}
               </>
             )}
-
+            </div>
             {error && <div className="text-zinc-300">{error}</div>}
 
             <div className="flex items-center justify-center mt-4 space-x-4">
