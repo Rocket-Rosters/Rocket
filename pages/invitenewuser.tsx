@@ -96,7 +96,6 @@ export default function InviteStudentsPage() {
             // @ts-ignore
             .eq('email', row.email);
 
-          console.log('DATTATATA', data);
           if (COOLERROR) {
             console.error(COOLERROR);
           }
@@ -106,6 +105,7 @@ export default function InviteStudentsPage() {
         }
       }
     };
+    alert('ZOMG! 🚀 You just invited a bunch of students!');
     reader.readAsBinaryString(file);
   };
 
