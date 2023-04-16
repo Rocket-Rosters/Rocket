@@ -48,6 +48,24 @@ function CoursesTable({
     return filteredStudents;
   }
 
+  const [profiles, setProfiles] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function fetchProfiles() {
+      const { data: profiles, error } = await supabase
+        .from('profiles')
+        .select('id, full_name');
+
+      if (error) {
+        console.error(error);
+      } else {
+        setProfiles(profiles);
+      }
+    }
+
+    fetchProfiles();
+  }, []);
+
   const filteredStudents = filterStudentsByCourseId(course_id, courseStudents);
 
   return (
@@ -100,7 +118,11 @@ function CoursesTable({
       </thead>
       {/* body */}
       <tbody>
-        {filteredStudents.map((student: any) => (
+        {filteredStudents.map((student: any) => {
+          const profile = profiles.find((p) => p.id === student.profile_id);
+          const studentName = profile ? profile.full_name : student.profile_id;
+
+          return (
           <tr key={student.id}>
             <td
               style={{
@@ -109,7 +131,7 @@ function CoursesTable({
                 fontSize: '14px'
               }}
             >
-              {student.profile_id}
+              {studentName}
             </td>
             <td
               style={{
@@ -158,7 +180,8 @@ function CoursesTable({
 
 
           </tr>
-        ))}
+          );
+        })}
       </tbody>
     </table>
   );
