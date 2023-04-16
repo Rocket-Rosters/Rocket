@@ -221,8 +221,18 @@ function Popup({ showPopup, setShowPopup, courseStudents, course_id }) {
               courseStudents={courseStudents}
               course_id={course_id}
             />
-            <p className="text-xl mt-8 mb-4 font-semibold text-white"></p>
+            <p className="text-xl mt-8 mb-4 font-semibold text-white "></p>
+            <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: '20px'
+            }}
+          >
+            <Button className="center" onClick={handleXButtonClick}>Send Attendence</Button>
+            </div>
           </Card>
+          
         </div>
       </div>
     </div>
