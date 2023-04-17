@@ -193,8 +193,6 @@ export default function Avatar({ url, size = 150, onUpload, uid }: Props) {
   const avatarSize = { height: size, width: size };
   const user = useUser();
 
-  console.log(user?.id);
-
   useEffect(() => {
     if (url) {
       setAvatarUrl(url);
@@ -202,9 +200,12 @@ export default function Avatar({ url, size = 150, onUpload, uid }: Props) {
       downloadImage(uid);
     }
   }, [url, uid]);
-
+  // 
   async function downloadImage(uid = user?.id) {
     try {
+      // TODO uid is undefined
+
+      console.log("UID", uid)
       const { data, error } = await supabase.storage
         .from('avatars')
         .download(`${uid}/avatar`);

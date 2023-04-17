@@ -123,63 +123,78 @@ function CoursesTable({
           const studentName = profile ? profile.full_name : student.profile_id;
 
           return (
-          <tr key={student.id}>
-            <td
-              style={{
-                border: '1px solid purple',
-                padding: '10px',
-                fontSize: '14px'
-              }}
-            >
-              {studentName}
-            </td>
-            <td
-              style={{
-                border: '1px solid purple',
-                padding: '10px',
-                fontSize: '14px'
-              }}
-            >
-              {student.role}
-            </td>
-            <td
-  style={{
-    border: '1px solid purple',
-    padding: '10px',
-    fontSize: '14px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    margin: '0 auto',
-  }}
->
-  <Button
-    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    onClick={() => {
-      console.log('clicked');
-    }}
-  >
-    Present
-  </Button>
-  <Button
-    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    onClick={() => {
-      console.log('clicked');
-    }}
-  >
-    Absent
-  </Button>
-  <Button
-    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    onClick={() => {
-      console.log('clicked');
-    }}
-  >
-    Tardy
-  </Button>
-</td>
+            <tr key={student.id}>
+              <td
+                style={{
+                  border: '1px solid purple',
+                  padding: '10px',
+                  fontSize: '14px'
+                }}
+              >
+                {studentName}
+              </td>
+              <td
+                style={{
+                  border: '1px solid purple',
+                  padding: '10px',
+                  fontSize: '14px'
+                }}
+              >
+                {student.role}
+              </td>
+              <td
+                style={{
+                  border: '1px solid purple',
+                  padding: '10px',
+                  fontSize: '14px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  margin: '0 auto'
+                }}
+              >
+                <button
+                  className={`${
+                    profile?.status === 'present' ? 'bg-red-500' : 'bg-blue-500'
+                  } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
+                  onClick={async () => {
+                    // Update the db AND update the state array with the student's status
+                    await supabase
+                      .from('attendance')
+                      .upsert({ status: 'present' })
+                      .eq('profile_id', profile.id);
+                    // and date and time
 
+                    const newProfile = { ...profile };
+                    newProfile.status = 'present';
 
-          </tr>
+                    const filteredProfiles = profiles.filter(
+                      profile => profile.id !== newProfile.id
+                    );
+
+                    setProfiles([...filteredProfiles, newProfile]);
+                    console.log(profiles, profile?.status)
+                  }}
+                >
+                  Present
+                </button>
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={() => {
+                    console.log('clicked');
+                  }}
+                >
+                  Absent
+                </button>
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={() => {
+                    console.log('clicked');
+                  }}
+                >
+                  Tardy
+                </button>
+              </td>
+            </tr>
           );
         })}
       </tbody>
@@ -223,16 +238,17 @@ function Popup({ showPopup, setShowPopup, courseStudents, course_id }) {
             />
             <p className="text-xl mt-8 mb-4 font-semibold text-white "></p>
             <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              marginTop: '20px'
-            }}
-          >
-            <Button className="center" onClick={handleXButtonClick}>Send Attendence</Button>
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: '20px'
+              }}
+            >
+              <Button className="center" onClick={handleXButtonClick}>
+                Send Attendence
+              </Button>
             </div>
           </Card>
-          
         </div>
       </div>
     </div>

@@ -16,7 +16,7 @@ import Dropdown from '@/components/ui/Dropdown';
 const options: any = [
   { value: 'option1', label: 'Here' },
   { value: 'option2', label: 'Absent' },
-  { value: 'option3', label: 'Late' },
+  { value: 'option3', label: 'Late' }
 ];
 
 function DropdownPage() {
