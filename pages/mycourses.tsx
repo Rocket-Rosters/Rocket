@@ -26,7 +26,79 @@ interface Props {
   children?: ReactNode;
 }
 // make a component called Popup that will make a popup when the user clicks button, When they click the background the popup will close
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const supabase = createServerSupabaseClient(ctx);
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
 
+  if (!session)
+    return {
+      redirect: {
+        destination: '/signin',
+        permanent: false
+      }
+    };
+
+  return {
+    props: {
+      initialSession: session,
+      user: session.user
+    }
+  };
+};
+//@ts-ignore
+function Popup({ showPopup, setShowPopup, courseStudents, course_id }) {
+  const handleXButtonClick = () => {
+    setShowPopup(false);
+  };
+
+  return (
+    <div
+      className={`${
+        showPopup ? 'block' : 'hidden'
+      } fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 z-30`}
+    >
+      <div
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2 bg-gray-800 rounded-md shadow-lg"
+        style={{ backgroundColor: 'rgba(0, 0, 0, 0.9)' }}
+      >
+        <div className="p-4">
+          <h1 className="text-xl font-bold mb-2 text-white">Attendance</h1>
+          <p className="text-gray-300">Student List</p>
+          <Card
+            title=""
+            description=""
+            footer={
+              <p>
+                <button className="close-button" onClick={handleXButtonClick}>
+                  Close
+                </button>
+              </p>
+            }
+          >
+            <CoursesTable
+              courseStudents={courseStudents}
+              course_id={course_id}
+            />
+            <p className="text-xl mt-8 mb-4 font-semibold text-white "></p>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: '20px'
+              }}
+            >
+              <Button className="center" onClick={handleXButtonClick}>
+                Send Attendence
+              </Button>
+            </div>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}
 function CoursesTable({
   courseStudents,
   course_id
@@ -248,59 +320,6 @@ function CoursesTable({
   );
 }
 
-//@ts-ignore
-function Popup({ showPopup, setShowPopup, courseStudents, course_id }) {
-  const handleXButtonClick = () => {
-    setShowPopup(false);
-  };
-
-  return (
-    <div
-      className={`${
-        showPopup ? 'block' : 'hidden'
-      } fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 z-30`}
-    >
-      <div
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2 bg-gray-800 rounded-md shadow-lg"
-        style={{ backgroundColor: 'rgba(0, 0, 0, 0.9)' }}
-      >
-        <div className="p-4">
-          <h1 className="text-xl font-bold mb-2 text-white">Attendance</h1>
-          <p className="text-gray-300">Student List</p>
-          <Card
-            title=""
-            description=""
-            footer={
-              <p>
-                <button className="close-button" onClick={handleXButtonClick}>
-                  Close
-                </button>
-              </p>
-            }
-          >
-            <CoursesTable
-              courseStudents={courseStudents}
-              course_id={course_id}
-            />
-            <p className="text-xl mt-8 mb-4 font-semibold text-white "></p>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                marginTop: '20px'
-              }}
-            >
-              <Button className="center" onClick={handleXButtonClick}>
-                Send Attendence
-              </Button>
-            </div>
-          </Card>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function Card({ title, description, footer, children }: Props) {
   return (
     <div className="border border-zinc-700	max-w-3xl w-full p rounded-md m-auto my-8">
@@ -316,27 +335,7 @@ function Card({ title, description, footer, children }: Props) {
   );
 }
 
-export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const supabase = createServerSupabaseClient(ctx);
-  const {
-    data: { session }
-  } = await supabase.auth.getSession();
 
-  if (!session)
-    return {
-      redirect: {
-        destination: '/signin',
-        permanent: false
-      }
-    };
-
-  return {
-    props: {
-      initialSession: session,
-      user: session.user
-    }
-  };
-};
 // this will use the user?.id to get the courses from the database table called enrollment
 // and then display them in a list
 
@@ -352,7 +351,6 @@ export default function FacultyCourses({ user }: { user: User }) {
   useEffect(() => {
     const fetchData = async () => {
       await fetchCourses();
-      await fetchCourseStudents();
       await fetchCourseName();
     };
     fetchData();
@@ -378,29 +376,6 @@ export default function FacultyCourses({ user }: { user: User }) {
     }
   }
   // based in the course id, get the students in the course
-  async function fetchCourseStudents() {
-    try {
-      setLoading(true);
-      if (courses.length > 0) {
-        const { data, error: any } = await supabase
-          .from('enrollment')
-          .select('*')
-          .eq('course_id', courseId); // assuming you want to fetch students for the first course in the list
-        if (error) throw error;
-        console.log('course of students:', data);
-        //@ts-ignore
-        setCourseStudents(data);
-        //@ts-ignore
-        setCourseName(data.name);
-      }
-    } catch (error) {
-      //@ts-ignore
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   const fetchCourseName = async () => {
     const { data, error } = await supabase.from('courses').select('*');
 
@@ -411,15 +386,7 @@ export default function FacultyCourses({ user }: { user: User }) {
     }
   };
 
-  const fetchStudentName = async () => {
-    const { data, error } = await supabase.from('profiles').select('*');
-
-    if (error) {
-      console.error(error);
-    } else {
-      setCourses(data);
-    }
-  };
+ 
 
   return (
     <PageWrapper allowedRoles={['student']}>
@@ -430,17 +397,14 @@ export default function FacultyCourses({ user }: { user: User }) {
               {loading ? (
                 <div className="text-zinc-300">Loading...</div>
               ) : (
-                <>
+                <>  
                   {courses.map((course: any) => (
                     <div key={course.id}>
                       <Card
                         title=""
                         footer={
-                          <Button onClick={() => setCourseId(course.id)
-                          
-                          }>
-                            View more
-                          </Button>
+                          <button onClick={() => setShowPopup(true)}>View more</button>
+
                         }
                       >
                         <div className="text-zinc-300">{course.name}</div>
