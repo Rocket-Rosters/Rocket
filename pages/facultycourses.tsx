@@ -49,6 +49,7 @@ function CoursesTable({
   }
 
   const [profiles, setProfiles] = useState<any[]>([]);
+  const [courseSession, setCourseSession] = useState(0);
 
   useEffect(() => {
     async function fetchProfiles() {
@@ -68,8 +69,46 @@ function CoursesTable({
 
   const filteredStudents = filterStudentsByCourseId(course_id, courseStudents);
 
+  async function updateStudentStatus(profile: any, status: string) {
+  try{
+     await supabase
+     .from('attendance')
+     .upsert({ Status: status, course_id: course_id, profile_id: profile.id, 'DateTime': courseSession }
+  )
+      // .eq('profile_id', profile.id)
+      // .eq('course_id', course_id)
+      // .eq('DateTime', courseSession)
+     .then((result) => {
+       console.log('Upsert successful:', result);
+     })
+     .catch((error) => {
+       console.error('Error during upsert:', error);
+     });
+
+    const newProfile = { ...profile };
+    newProfile.status = status;
+
+    const filteredProfiles = profiles.filter(
+      profile => profile.id !== newProfile.id
+    );
+
+    setProfiles([...filteredProfiles, newProfile]);
+    console.log(profiles, profile?.status);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
   return (
-    <table
+    <><form className="flex flex-col">
+      <label className="text-white">Session Date/Time</label>
+      <input
+        className="border border-zinc-700 rounded-md p-2 mb-4 text-black"
+        type="datetime-local"
+        placeholder="Course Name"
+        // store input response in courseSession using setCourseSession
+        onChange={(e) => setCourseSession(e.target.value)} />
+    </form><table
       style={{
         margin: 'auto',
         borderCollapse: 'collapse',
@@ -79,131 +118,114 @@ function CoursesTable({
         fontSize: '14px'
       }}
     >
-      <thead>
-        <tr>
-          <th
-            style={{
-              border: '1px solid purple',
-              padding: '10px',
-              backgroundColor: '#9370DB',
-              color: 'white',
-              fontSize: '14px'
-            }}
-          >
-            Student Name
-          </th>
-          <th
-            style={{
-              border: '1px solid purple',
-              padding: '10px',
-              backgroundColor: '#9370DB',
-              color: 'white',
-              fontSize: '14px'
-            }}
-          >
-            Status
-          </th>
-          <th
-            style={{
-              border: '1px solid purple',
-              padding: '10px',
-              backgroundColor: '#9370DB',
-              color: 'white',
-              fontSize: '14px'
-            }}
-          >
-            Status Update
-          </th>
-        </tr>
-      </thead>
-      {/* body */}
-      <tbody>
-        {filteredStudents.map((student: any) => {
-          const profile = profiles.find((p) => p.id === student.profile_id);
-          const studentName = profile ? profile.full_name : student.profile_id;
+        <thead>
+          <tr>
+            <th
+              style={{
+                border: '1px solid purple',
+                padding: '10px',
+                backgroundColor: '#9370DB',
+                color: 'white',
+                fontSize: '14px'
+              }}
+            >
+              Student Name
+            </th>
+            <th
+              style={{
+                border: '1px solid purple',
+                padding: '10px',
+                backgroundColor: '#9370DB',
+                color: 'white',
+                fontSize: '14px'
+              }}
+            >
+              Status
+            </th>
+            <th
+              style={{
+                border: '1px solid purple',
+                padding: '10px',
+                backgroundColor: '#9370DB',
+                color: 'white',
+                fontSize: '14px'
+              }}
+            >
+              Status Update
+            </th>
+          </tr>
+        </thead>
+        {/* body */}
+        <tbody>
+          {filteredStudents.map((student: any) => {
+            const profile = profiles.find((p) => p.id === student.profile_id);
+            const studentName = profile ? profile.full_name : student.profile_id;
 
-          return (
-            <tr key={student.id}>
-              <td
-                style={{
-                  border: '1px solid purple',
-                  padding: '10px',
-                  fontSize: '14px'
-                }}
-              >
-                {studentName}
-              </td>
-              <td
-                style={{
-                  border: '1px solid purple',
-                  padding: '10px',
-                  fontSize: '14px'
-                }}
-              >
-                {student.role}
-              </td>
-              <td
-                style={{
-                  border: '1px solid purple',
-                  padding: '10px',
-                  fontSize: '14px',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  margin: '0 auto'
-                }}
-              >
-                <button
-                  className={`${
-                    profile?.status === 'present' ? 'bg-red-500' : 'bg-blue-500'
-                  } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
-                  onClick={async () => {
-                    // Update the db AND update the state array with the student's status
-                    await supabase
-                      .from('attendance')
-                      .upsert({ status: 'present' })
-                      .eq('profile_id', profile.id);
-                    // and date and time
-
-                    const newProfile = { ...profile };
-                    newProfile.status = 'present';
-
-                    const filteredProfiles = profiles.filter(
-                      profile => profile.id !== newProfile.id
-                    );
-
-                    setProfiles([...filteredProfiles, newProfile]);
-                    console.log(profiles, profile?.status)
+            return (
+              <tr key={student.id}>
+                <td
+                  style={{
+                    border: '1px solid purple',
+                    padding: '10px',
+                    fontSize: '14px'
                   }}
                 >
-                  Present
-                </button>
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  onClick={() => {
-                    console.log('clicked');
+                  {studentName}
+                </td>
+                <td
+                  style={{
+                    border: '1px solid purple',
+                    padding: '10px',
+                    fontSize: '14px'
                   }}
                 >
-                  Absent
-                </button>
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  onClick={() => {
-                    console.log('clicked');
+                  {student.role}
+                </td>
+                <td
+                  style={{
+                    border: '1px solid purple',
+                    padding: '10px',
+                    fontSize: '14px',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    margin: '0 auto'
                   }}
                 >
-                  Tardy
-                </button>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+                  <button
+                    className={`${profile?.status === 'present' ? 'bg-red-500' : 'bg-blue-500'} hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
+                    onClick={async () => {
+                      updateStudentStatus(profile, 'present');
+                  }}
+                  >
+                    Present
+                  </button>
+                  <button
+                    className={`${profile?.status === 'absent' ? 'bg-red-500' : 'bg-blue-500'} hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
+                    onClick={async () => {
+                      updateStudentStatus(profile, 'absent');
+                  }}
+                  >
+                    Absent
+                  </button>
+                  <button
+                    className={`${profile?.status === 'tardy' ? 'bg-red-500' : 'bg-blue-500'} hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
+                    onClick={async () => {
+                      updateStudentStatus(profile, 'tardy');
+                  }}
+                  >
+                    Tardy
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table></>
   );
 }
 
 //@ts-ignore
-function Popup({ showPopup, setShowPopup, courseStudents, course_id }) {
+function Popup({ showPopup, setShowPopup, courseStudents, course_id}) {
   const handleXButtonClick = () => {
     setShowPopup(false);
   };
