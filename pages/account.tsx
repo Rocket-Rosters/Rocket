@@ -265,12 +265,10 @@ export default function Account({ user }: { user: User }) {
           description="Please enter the username you want to use to login."
           footer={<p>We will email you to verify the change.</p>}
         >
-          {Object.entries(details).map(([key, value]) => {
+          { details && Object.entries(details).map(([key, value]) => {
             if (
               key === 'id' ||
-              key === 'email' ||
-              key === 'full_name' ||
-              key === 'avatar_url'
+              key === 'email'
             )
               return null;
             return (

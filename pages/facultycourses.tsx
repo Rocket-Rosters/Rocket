@@ -70,54 +70,65 @@ function CoursesTable({
   const filteredStudents = filterStudentsByCourseId(course_id, courseStudents);
 
   async function updateStudentStatus(profile: any, status: string) {
-  try{
-     await supabase
-     .from('attendance')
-     .upsert({ Status: status, course_id: course_id, profile_id: profile.id, 'DateTime': courseSession }
-  )
-      // .eq('profile_id', profile.id)
-      // .eq('course_id', course_id)
-      // .eq('DateTime', courseSession)
-     .then((result) => {
-       console.log('Upsert successful:', result);
-     })
-     .catch((error) => {
-       console.error('Error during upsert:', error);
-     });
+    try {
+      // make a varible id that is the course_id + profile.id + courseSession with sting type and use it in the upsert
+      const id = course_id + profile.id + courseSession;
+      console.log(id);
+      await supabase
+        .from('attendance')
+        .upsert({
+          id: id,
+          Status: status,
+          course_id: course_id,
+          profile_id: profile.id,
+          DateTime: courseSession
+        })
+        // .eq('profile_id', profile.id)
+        // .eq('course_id', course_id)
+        // .eq('DateTime', courseSession)
+        .then((result) => {
+          console.log('Upsert successful:', result);
+        })
+        .catch((error) => {
+          console.error('Error during upsert:', error);
+        });
 
-    const newProfile = { ...profile };
-    newProfile.status = status;
+      const newProfile = { ...profile };
+      newProfile.status = status;
 
-    const filteredProfiles = profiles.filter(
-      profile => profile.id !== newProfile.id
-    );
+      const filteredProfiles = profiles.filter(
+        (profile) => profile.id !== newProfile.id
+      );
 
-    setProfiles([...filteredProfiles, newProfile]);
-    console.log(profiles, profile?.status);
-  } catch (error) {
-    console.error(error);
+      setProfiles([...filteredProfiles, newProfile]);
+      console.log(profiles, profile?.status);
+    } catch (error) {
+      console.error(error);
+    }
   }
-}
 
   return (
-    <><form className="flex flex-col">
-      <label className="text-white">Session Date/Time</label>
-      <input
-        className="border border-zinc-700 rounded-md p-2 mb-4 text-black"
-        type="datetime-local"
-        placeholder="Course Name"
-        // store input response in courseSession using setCourseSession
-        onChange={(e) => setCourseSession(e.target.value)} />
-    </form><table
-      style={{
-        margin: 'auto',
-        borderCollapse: 'collapse',
-        border: '2px solid black',
-        backgroundColor: '#E6E6FA',
-        color: 'black',
-        fontSize: '14px'
-      }}
-    >
+    <>
+      <form className="flex flex-col">
+        <label className="text-white">Session Date/Time</label>
+        <input
+          className="border border-zinc-700 rounded-md p-2 mb-4 text-black"
+          type="datetime-local"
+          placeholder="Course Name"
+          // store input response in courseSession using setCourseSession
+          onChange={(e) => setCourseSession(e.target.value)}
+        />
+      </form>
+      <table
+        style={{
+          margin: 'auto',
+          borderCollapse: 'collapse',
+          border: '2px solid black',
+          backgroundColor: '#E6E6FA',
+          color: 'black',
+          fontSize: '14px'
+        }}
+      >
         <thead>
           <tr>
             <th
@@ -159,7 +170,9 @@ function CoursesTable({
         <tbody>
           {filteredStudents.map((student: any) => {
             const profile = profiles.find((p) => p.id === student.profile_id);
-            const studentName = profile ? profile.full_name : student.profile_id;
+            const studentName = profile
+              ? profile.full_name
+              : student.profile_id;
 
             return (
               <tr key={student.id}>
@@ -192,26 +205,36 @@ function CoursesTable({
                   }}
                 >
                   <button
-                    className={`${profile?.status === 'present' ? 'bg-red-500' : 'bg-blue-500'} hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
+                    className={`${
+                      profile?.status === 'present'
+                        ? 'bg-red-500'
+                        : 'bg-blue-500'
+                    } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
                     onClick={async () => {
                       updateStudentStatus(profile, 'present');
-                  }}
+                    }}
                   >
                     Present
                   </button>
                   <button
-                    className={`${profile?.status === 'absent' ? 'bg-red-500' : 'bg-blue-500'} hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
+                    className={`${
+                      profile?.status === 'absent'
+                        ? 'bg-red-500'
+                        : 'bg-blue-500'
+                    } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
                     onClick={async () => {
                       updateStudentStatus(profile, 'absent');
-                  }}
+                    }}
                   >
                     Absent
                   </button>
                   <button
-                    className={`${profile?.status === 'tardy' ? 'bg-red-500' : 'bg-blue-500'} hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
+                    className={`${
+                      profile?.status === 'tardy' ? 'bg-red-500' : 'bg-blue-500'
+                    } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
                     onClick={async () => {
                       updateStudentStatus(profile, 'tardy');
-                  }}
+                    }}
                   >
                     Tardy
                   </button>
@@ -220,12 +243,13 @@ function CoursesTable({
             );
           })}
         </tbody>
-      </table></>
+      </table>
+    </>
   );
 }
 
 //@ts-ignore
-function Popup({ showPopup, setShowPopup, courseStudents, course_id}) {
+function Popup({ showPopup, setShowPopup, courseStudents, course_id }) {
   const handleXButtonClick = () => {
     setShowPopup(false);
   };
