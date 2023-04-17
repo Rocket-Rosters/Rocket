@@ -265,32 +265,29 @@ export default function Account({ user }: { user: User }) {
           description="Please enter the username you want to use to login."
           footer={<p>We will email you to verify the change.</p>}
         >
-          { details && Object.entries(details).map(([key, value]) => {
-            if (
-              key === 'id' ||
-              key === 'email'
-            )
-              return null;
-            return (
-              <div key={key} className="flex flex-col mt-4">
-                <label htmlFor={key} className="mb-2 font-medium">
-                  {key}
-                </label>
-                <input
-                  id={key}
-                  type="text"
-                  // @ts-ignore
-                  value={value ?? ''}
-                  onChange={(event) => {
-                    const newDetails = { ...details };
-                    newDetails[key] = event.target.value;
-                    setDetails(newDetails);
-                  }}
-                  className="bg-black text-white border border-white rounded-md py-2 px-3 mb-2"
-                />
-              </div>
-            );
-          })}
+          {details &&
+            Object.entries(details).map(([key, value]) => {
+              if (key === 'id' || key === 'email') return null;
+              return (
+                <div key={key} className="flex flex-col mt-4">
+                  <label htmlFor={key} className="mb-2 font-medium">
+                    {key}
+                  </label>
+                  <input
+                    id={key}
+                    type="text"
+                    // @ts-ignore
+                    value={value ?? ''}
+                    onChange={(event) => {
+                      const newDetails = { ...details };
+                      newDetails[key] = event.target.value;
+                      setDetails(newDetails);
+                    }}
+                    className="bg-black text-white border border-white rounded-md py-2 px-3 mb-2"
+                  />
+                </div>
+              );
+            })}
           <button
             onClick={() => {
               handleUpdate();

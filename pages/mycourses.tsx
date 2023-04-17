@@ -31,15 +31,14 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const {
     data: { session }
   } = await supabase.auth.getSession();
-
-  if (!session)
+  if (!session) {
     return {
       redirect: {
         destination: '/signin',
         permanent: false
       }
     };
-
+  }
   return {
     props: {
       initialSession: session,
@@ -88,11 +87,7 @@ function Popup({ showPopup, setShowPopup, courseStudents, course_id }) {
                 justifyContent: 'center',
                 marginTop: '20px'
               }}
-            >
-              <Button className="center" onClick={handleXButtonClick}>
-                Send Attendence
-              </Button>
-            </div>
+            ></div>
           </Card>
         </div>
       </div>
@@ -141,56 +136,8 @@ function CoursesTable({
 
   const filteredStudents = filterStudentsByCourseId(course_id, courseStudents);
 
-  async function updateStudentStatus(profile: any, status: string) {
-    try {
-      // make a varible id that is the course_id + profile.id + courseSession with sting type and use it in the upsert
-      const id = course_id + profile.id + courseSession;
-      console.log(id);
-      await supabase
-        .from('attendance')
-        .upsert({
-          id: id,
-          Status: status,
-          course_id: course_id,
-          profile_id: profile.id,
-          DateTime: courseSession
-        })
-        // .eq('profile_id', profile.id)
-        // .eq('course_id', course_id)
-        // .eq('DateTime', courseSession)
-        .then((result) => {
-          console.log('Upsert successful:', result);
-        })
-        .catch((error) => {
-          console.error('Error during upsert:', error);
-        });
-
-      const newProfile = { ...profile };
-      newProfile.status = status;
-
-      const filteredProfiles = profiles.filter(
-        (profile) => profile.id !== newProfile.id
-      );
-
-      setProfiles([...filteredProfiles, newProfile]);
-      console.log(profiles, profile?.status);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   return (
     <>
-      <form className="flex flex-col">
-        <label className="text-white">Session Date/Time</label>
-        <input
-          className="border border-zinc-700 rounded-md p-2 mb-4 text-black"
-          type="datetime-local"
-          placeholder="Course Name"
-          // store input response in courseSession using setCourseSession
-          onChange={(e) => setCourseSession(e.target.value)}
-        />
-      </form>
       <table
         style={{
           margin: 'auto',
@@ -275,42 +222,7 @@ function CoursesTable({
                     justifyContent: 'space-between',
                     margin: '0 auto'
                   }}
-                >
-                  <button
-                    className={`${
-                      profile?.status === 'present'
-                        ? 'bg-red-500'
-                        : 'bg-blue-500'
-                    } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
-                    onClick={async () => {
-                      updateStudentStatus(profile, 'present');
-                    }}
-                  >
-                    Present
-                  </button>
-                  <button
-                    className={`${
-                      profile?.status === 'absent'
-                        ? 'bg-red-500'
-                        : 'bg-blue-500'
-                    } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
-                    onClick={async () => {
-                      updateStudentStatus(profile, 'absent');
-                    }}
-                  >
-                    Absent
-                  </button>
-                  <button
-                    className={`${
-                      profile?.status === 'tardy' ? 'bg-red-500' : 'bg-blue-500'
-                    } hover:bg-blue-700 text-white font-bold py-2 px-4 rounded`}
-                    onClick={async () => {
-                      updateStudentStatus(profile, 'tardy');
-                    }}
-                  >
-                    Tardy
-                  </button>
-                </td>
+                ></td>
               </tr>
             );
           })}
@@ -335,7 +247,6 @@ function Card({ title, description, footer, children }: Props) {
   );
 }
 
-
 // this will use the user?.id to get the courses from the database table called enrollment
 // and then display them in a list
 
@@ -359,17 +270,19 @@ export default function FacultyCourses({ user }: { user: User }) {
   // store each course in the database in the courses array
 
   async function fetchCourses() {
+    // define data as an data type
+
     try {
       setLoading(true);
-      const { data, error: any } = await supabase
+      const { data, error } = await supabase
         .from('enrollment')
         .select('*')
         .eq('profile_id', user?.id);
       if (error) throw error;
+      //@ts-ignore
       setCourses(data);
-
-      console.log('courses:', data);
     } catch (error) {
+      //@ts-ignore
       setError(error.message);
     } finally {
       setLoading(false);
@@ -382,53 +295,67 @@ export default function FacultyCourses({ user }: { user: User }) {
     if (error) {
       console.error(error);
     } else {
+      //@ts-ignore
       setCourses(data);
     }
   };
 
- 
-
   return (
     <PageWrapper allowedRoles={['student']}>
       <div className="flex flex-col items-center justify-center min-h-screen py-2">
-        <Card title="Courses">
-          <div className="flex flex-col items-center justify-center">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {loading ? (
-                <div className="text-zinc-300">Loading...</div>
-              ) : (
-                <>  
-                  {courses.map((course: any) => (
-                    <div key={course.id}>
-                      <Card
-                        title=""
-                        footer={
-                          <button onClick={() => setShowPopup(true)}>View more</button>
-
-                        }
-                      >
-                        <div className="text-zinc-300">{course.name}</div>
-                      </Card>
-                    </div>
-                  ))}
-                </>
+        <div className="max-w-4xl mx-auto">
+          {loading ? (
+            <div className="text-zinc-300">Loading...</div>
+          ) : (
+            <>
+              {error && <div className="text-zinc-300">{error}</div>}
+              {courses.length > 0 && (
+                <table className="w-full table-auto">
+                  <thead>
+                    <tr>
+                      <th className="text-left">Course Name</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {courses.map((course: any) => (
+                      <tr key={course.id}>
+                        <td className="px-4 py-2">{course.name}</td>
+                        <td className="px-4 py-2">
+                          <button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            onClick={() => {
+                              setShowPopup(true);
+                              setCourseId(course.id);
+                            }}
+                          >
+                            View more
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               )}
-            </div>
-            {error && <div className="text-zinc-300">{error}</div>}
-
-            <div className="flex items-center justify-center mt-4 space-x-4">
-              <Button
-                onClick={() => {
-                  fetchCourses();
-                  fetchCourseName();
-                }}
-              >
-                Refresh Courses
-              </Button>
-            </div>
+            </>
+          )}
+          <div className="flex items-center justify-center mt-4 space-x-4">
+            <Button
+              onClick={() => {
+                fetchCourses();
+                fetchCourseName();
+              }}
+            >
+              Refresh Courses
+            </Button>
+            <Popup
+              showPopup={showPopup}
+              setShowPopup={setShowPopup}
+              courseStudents={courseStudents}
+              course_id={courseId}
+            />
           </div>
-        </Card>
-        
+        </div>
       </div>
     </PageWrapper>
   );
