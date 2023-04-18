@@ -311,6 +311,7 @@ export default function FacultyCourses({ user }: { user: User }) {
               {error && <div className="text-zinc-300">{error}</div>}
               {courses.length > 0 && (
                 <table className="w-full table-auto">
+                  <caption className="text-2xl font-bold mb-4">Courses</caption>
                   <thead>
                     <tr>
                       <th className="text-left">Course Name</th>
@@ -322,7 +323,7 @@ export default function FacultyCourses({ user }: { user: User }) {
                       <tr key={course.id}>
                         <td className="px-4 py-2">{course.name}</td>
                         <td className="px-4 py-2">
-                          <button
+                          <Button
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                             onClick={() => {
                               setShowPopup(true);
@@ -330,7 +331,7 @@ export default function FacultyCourses({ user }: { user: User }) {
                             }}
                           >
                             View more
-                          </button>
+                          </Button>
                         </td>
                       </tr>
                     ))}
