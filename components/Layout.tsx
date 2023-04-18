@@ -15,7 +15,7 @@ export default function Layout({ children, meta: pageMeta }: Props) {
   const router = useRouter();
   const meta = {
     title: 'Rocket Rosters',
-    description: 'Brought to you by Vercel, Stripe, and Supabase.',
+    description: 'Made By',
     cardImage: '/RocketTransparent.png',
     ...pageMeta
   };
