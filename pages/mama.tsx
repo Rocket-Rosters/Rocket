@@ -16,7 +16,7 @@ import Dropdown from '@/components/ui/Dropdown';
 const options: any = [
   { value: 'option1', label: 'Here' },
   { value: 'option2', label: 'Absent' },
-  { value: 'option3', label: 'Late' },
+  { value: 'option3', label: 'Late' }
 ];
 
 function DropdownPage() {
@@ -29,7 +29,10 @@ function DropdownPage() {
   return (
     <div>
       <h1>Dropdown Example</h1>
+      {/*@ts-ignore */}
       <Dropdown options={options} onSelect={handleSelect} />
+      //@ts-ignore
+      {/*@ts-ignore */}
       {selectedOption && <p>You selected {selectedOption.label}.</p>}
     </div>
   );

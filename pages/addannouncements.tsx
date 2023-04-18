@@ -64,13 +64,15 @@ export default function AnnouncementPage() {
   const { user } = useUser();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [expiration, setExpiration] = useState('');
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     const { data, error } = await supabase.from('posts').insert({
       title,
-      content
+      content,
+      expiration
     });
 
     if (error) {
@@ -81,6 +83,7 @@ export default function AnnouncementPage() {
 
       setTitle('');
       setContent('');
+      setExpiration('');
     }
   };
 
@@ -119,6 +122,24 @@ export default function AnnouncementPage() {
                 name="content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="expiration"
+                className="block text-gray-700 font-bold mb-2"
+              >
+                Expiration
+              </label>
+              <input
+                // date and time picker
+                type="datetime-local"
+                id="expiration"
+                name="expiration"
+                value={expiration}
+                onChange={(e) => setExpiration(e.target.value)}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 required
               />
