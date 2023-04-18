@@ -1,9 +1,15 @@
+
 import { useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/utils/supabase-client';
 import { v4 as uuidv4 } from 'uuid';
 import Button from '@/components/ui/Button';
 import PageWrapper from '@/lib/pageWrapper';
 import Search, { facultyId, studentId } from './test';
+import {
+  createServerSupabaseClient,
+  User
+} from '@supabase/auth-helpers-nextjs';
+
 interface Props {
   title: string;
   description?: string;
@@ -26,7 +32,26 @@ function Card({ title, description, footer, children }: Props) {
   );
 }
 
-function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
+function CoursesTable({ courses }: any) {
+  const [profiles, setProfiles] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function fetchProfiles() {
+      const { data: profiles, error } = await supabase
+        .from('profiles')
+        .select('id, full_name');
+
+      if (error) {
+        console.error(error);
+      } else {
+        setProfiles(profiles);
+        console.log('profiles', profiles);
+      }
+    }
+
+    fetchProfiles();
+  }, []);
+
   return (
     <table
       style={{
@@ -73,10 +98,6 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
           >
             End date
           </th>
-          {/* <th style={{ border: '1px solid purple', padding: '10px' }}>
-            Attendance
-          </th> */}
-          {/* <th style={{ border: '1px solid purple', padding: '10px' }}>Students</th> */}
           <th
             style={{
               border: '1px solid purple',
@@ -102,15 +123,15 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
         </tr>
       </thead>
       <tbody>
-        {/* name text not null,
-    start_date date not null,
-    end_date date not null,
-    attendance jsonb null,
-    students array null,
-    faculty array null,
-    id uuid not null default uuid_generate_v4 (),
-    Meeting Pattern text null default 'M,TU,W,TH,F,SA,SU 12-1 am'::text, */}
-        {courses.map((course: any) => (
+        {courses.map((course: any) => {
+          console.log('course', String(course.faculty[0]));
+            const profile = profiles.find((p) => p.id === String(course.faculty[0]));
+            // const profile = profiles.find((p) => course.faculty.includes(p.id));
+            console.log('profile', profile)
+            const facultyName = profile
+              ? profile.full_name
+              : course.faculty;
+            return (
           <tr key={course.id}>
             <td
               style={{
@@ -139,12 +160,6 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
             >
               {course.end_date}
             </td>
-            {/* <td style={{ border: '1px solid purple', padding: '10px' }}>
-              {course.attendance}
-            </td> */}
-            {/* <td style={{ border: '1px solid purple', padding: '10px' }}>
-              {course.students}
-            </td> */}
             <td
               style={{
                 border: '1px solid purple',
@@ -152,13 +167,14 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
                 fontSize: '14px'
               }}
             >
-              {course.faculty}
+              {facultyName}
             </td>
             <td style={{ border: '1px solid purple', padding: '10px' }}>
               {course.meeting}
             </td>
           </tr>
-        ))}
+        );
+      })}
       </tbody>
     </table>
   );
@@ -169,14 +185,6 @@ const CoursesPage = () => {
   const { v4: uuidv4 } = require('uuid');
   const id = uuidv4();
   const [courses, setCourses] = useState([]);
-  const [name, setName] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [faculty, setFaculty] = useState('');
-  const [attendance, setAttendance] = useState('');
-  const [students, setStudents] = useState('');
-  const [meetingPattern, setMeetingPattern] = useState('');
-  // const id = uuidv4();
 
   useEffect(() => {
     fetchCourses();
@@ -188,110 +196,11 @@ const CoursesPage = () => {
     if (error) {
       console.error(error);
     } else {
-      //@ts-ignore
+      // @ts-ignore
       setCourses(data);
     }
   };
   // for each faculty and student in the array insert new row into the enrollment table
-  const handleEnrollment = async (
-    facultyId: any,
-    studentId: any,
-    CourseId: any
-  ) => {
-    facultyId.forEach(async (element: any) => {
-      const { data, error } = await supabase.from('enrollment').insert({
-        course_id: CourseId,
-        profile_id: element,
-        role: 'faculty'
-      });
-      if (error) {
-        console.error(error);
-      }
-    });
-    studentId.forEach(async (element: any) => {
-      const { data, error } = await supabase.from('enrollment').insert({
-        course_id: CourseId,
-        profile_id: element,
-        role: 'student'
-      });
-      if (error) {
-        console.error(error);
-      }
-    });
-  };
-
-  const handleCreate = async (event: any) => {
-    event.preventDefault();
-
-    const { data, error } = await supabase.from('courses').insert({
-      id,
-      name,
-      start_date: startDate,
-      end_date: endDate,
-      faculty: [facultyId],
-      student: [studentId],
-      meeting: meetingPattern
-    });
-
-    if (error) {
-      console.error(error);
-    } else {
-      console.log('Course created:', data);
-      // setCourses([...courses, data[0]]);
-      setName('');
-      setStartDate('');
-      setEndDate('');
-      setFaculty('');
-      setStudents('');
-      setMeetingPattern('');
-      // id = uuidv4();
-    }
-
-    // for each faculty and student in the array insert new row into the enrollment table
-    handleEnrollment(facultyId, studentId, id);
-  };
-
-  const handleUpdate = async (
-    id: any,
-    name: string,
-    startDate: any,
-    endDate: any
-  ) => {
-    const { data, error } = await supabase
-      .from('courses')
-      .update({ name, start_date: startDate, end_date: endDate })
-      .eq('id', id);
-
-    if (error) {
-      console.error(error);
-    } else {
-      console.log('Course updated:', data);
-      const updatedCourses = courses.map((course: any) =>
-        course.id === id
-          ? { ...course, name, start_date: startDate, end_date: endDate }
-          : course
-      );
-      //@ts-ignore
-      setCourses(updatedCourses);
-    }
-  };
-
-  const handleDelete = async (id: any) => {
-    const { data, error } = await supabase
-      .from('courses')
-      .delete()
-      .eq('id', id);
-
-    if (error) {
-      console.error(error);
-    } else {
-      console.log('Course deleted:', data);
-      const updatedCourses = courses.filter((course: any) => course.id !== id);
-      setCourses(updatedCourses);
-    }
-  };
-  // for all faculty and students in there array
-  // const addEnrollment = async (courseId: any, studentId: any) => {
 
   return (
     <PageWrapper allowedRoles={['student']}>
