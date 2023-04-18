@@ -1,21 +1,23 @@
-import Pricing from '@/components/Welcome';
 import React from 'react';
 import YouTube from 'react-youtube';
 
-interface Props {
-  products: any;
-}
+const videoId = 'iq0DxiEYLbQ';
 
-export default function PricingPage({ products }: Props) {
-  const videoId = 'iq0DxiEYLbQ';
+const YoutubeVideoTemplate = () => {
+  const opts = {
+    height: '500',
+    width: '800',
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      autoplay: 0,
+    },
+  };
 
   return (
-    <>
-      <div>
-        <YouTube videoId={videoId} />
-      </div>
-      {/* @ts-ignore */}
-      <Pricing products={products} />
-    </>
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <YouTube videoId={videoId} opts={opts} />
+    </div>
   );
-}
+};
+
+export default YoutubeVideoTemplate;
