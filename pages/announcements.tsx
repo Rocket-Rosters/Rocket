@@ -66,6 +66,7 @@ export default function AdminPage() {
       if (error) {
         console.error(error);
       } else {
+        //@ts-ignore
         setPosts(data);
         setLoading(false);
       }
@@ -80,24 +81,31 @@ export default function AdminPage() {
           <LoadingDots />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {posts.map((post) => (
-              <Card
-                key={post.id}
-                title={post.title}
-                description={post.content}
-                footer={
-                  <Link
-                    href={`/posts/${post.id}`}
-                    passHref={true}
-                    legacyBehavior={true}
-                  >
-                    <a>
-                      <Button>Read more</Button>
-                    </a>
-                  </Link>
-                }
-              />
-            ))}
+            {posts
+              // add a filter to show only announcements that are not expired
+              .map((post) => (
+                <Card
+                  //@ts-ignore
+                  key={post.id}
+                  //@ts-ignore
+                  title={post.title}
+                  //@ts-ignore
+                  description={post.content}
+                  footer={
+                    <Link
+                      //@ts-ignore
+                      href={`/posts/${post.id}`}
+                      passHref={true}
+                      legacyBehavior={true}
+                    >
+                      <a>
+                        <Button>Read more</Button>
+                      </a>
+                    </Link>
+                  }
+                  children={undefined}
+                />
+              ))}
           </div>
         )}
       </Card>

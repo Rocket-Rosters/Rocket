@@ -130,7 +130,14 @@ export default function Account({ user }: { user: User }) {
         >
           {details &&
             Object.entries(details).map(([key, value]) => {
-              if (key === 'id' || key === 'email'  || key === 'website'|| key === 'avatar_url' || key === 'full_name'  ) return null;
+              if (
+                key === 'id' ||
+                key === 'email' ||
+                key === 'website' ||
+                key === 'avatar_url' ||
+                key === 'full_name'
+              )
+                return null;
               return (
                 <div key={key} className="flex flex-col mt-4">
                   <label htmlFor={key} className="mb-2 font-medium">
