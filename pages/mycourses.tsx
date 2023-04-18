@@ -1,235 +1,179 @@
-import React, {
-  useState,
-  useEffect,
-  ReactNode,
-  createContext,
-  useContext
-} from 'react';
+// import { useState, useEffect, ReactNode } from 'react';
+// import { supabase } from '@/utils/supabase-client';
+// import { v4 as uuidv4 } from 'uuid';
 
+// interface Props {
+//   title: string;
+//   description?: string;
+//   footer?: ReactNode;
+//   children: ReactNode;
+// }
+
+// function Card({ title, description, footer, children }: Props) {
+//   return (
+//     <div className="border border-zinc-700	max-w-3xl w-full p rounded-md m-auto my-8">
+//       <div className="px-5 py-4">
+//         <h3 className="text-2xl mb-1 font-medium">{title}</h3>
+//         <p className="text-zinc-300">{description}</p>
+//         {children}
+//       </div>
+//       <div className="border-t border-zinc-700 bg-zinc-900 p-4 text-zinc-500 rounded-b-md">
+//         {footer}
+//       </div>
+//     </div>
+//   );
+// }
+
+// const CoursesPage = () => {
+//   const [courses, setCourses] = useState([]);
+//   const [name, setName] = useState('');
+//   const [startDate, setStartDate] = useState('');
+//   const [endDate, setEndDate] = useState('');
+
+//   useEffect(() => {
+//     fetchCourses();
+//   }, []);
+
+//   const fetchCourses = async () => {
+//     const { data, error } = await supabase.from('courses').select('*');
+
+//     if (error) {
+//       console.error(error);
+//     } else {
+//       setCourses(data);
+//     }
+//   };
+
+//   const handleCreate = async (event) => {
+//     event.preventDefault();
+
+//     const id = uuidv4();
+
+//     const { data, error } = await supabase.from('courses').insert({
+//       id,
+//       name,
+//       start_date: startDate,
+//       end_date: endDate,
+//     });
+
+//     if (error) {
+//       console.error(error);
+//     } else {
+//       console.log('Course created:', data);
+//       setCourses([...courses, data[0]]);
+//       setName('');
+//       setStartDate('');
+//       setEndDate('');
+//     }
+//   };
+
+//   const handleUpdate = async (id: any, name: string, startDate: any, endDate: any) => {
+//     const { data, error } = await supabase
+//       .from('courses')
+//       .update({ name, start_date: startDate, end_date: endDate })
+//       .eq('id', id);
+
+//     if (error) {
+//       console.error(error);
+//     } else {
+//       console.log('Course updated:', data);
+//       const updatedCourses = courses.map((course) =>
+//         course.id === id ? { ...course, name, start_date: startDate, end_date: endDate } : course
+//       );
+//       setCourses(updatedCourses);
+//     }
+//   };
+
+//   const handleDelete = async (id) => {
+//     const { data, error } = await supabase.from('courses').delete().eq('id', id);
+
+//     if (error) {
+//       console.error(error);
+//     } else {
+//       console.log('Course deleted:', data);
+//       const updatedCourses = courses.filter((course) => course.id !== id);
+//       setCourses(updatedCourses);
+//     }
+//   };
+
+//   return (
+//     <div>
+//       <h1 style={{ color: 'black' }}>Courses</h1>
+//       <form onSubmit={handleCreate}>
+//         <label htmlFor="name" style={{ color: 'black' }}>Name:</label>
+//         <input
+//           type="text"
+//           id="name"
+//           value={name}
+//           onChange={(event) => setName(event.target.value)}
+//           style={{ color: 'inherit' }}
+//         />
+
+//         <label htmlFor="startDate" style={{ color: 'black' }}>Start date:</label>
+//         <input
+//           type="date"
+//           id="startDate"
+//           value={startDate}
+//           onChange={(event) => setStartDate(event.target.value)}
+//           style={{ color: 'inherit' }}
+//         />
+
+//         <label htmlFor="endDate" style={{ color: 'black' }}>End date:</label>
+//         <input
+//           type="date"
+//           id="endDate"
+//           value={endDate}
+//           onChange={(event) => setEndDate(event.target.value)}
+//           style={{ color: 'inherit' }}
+//         />
+
+//         <button type="submit">Create course</button>
+//       </form>
+
+//       <table>
+//         <thead>
+//           <tr>
+//             <th>Name</th>
+//             <th>Start date</th>
+//             <th>End date</th>
+//             <th>Actions</th>
+//           </tr>
+//         </thead>
+
+//         <tbody>
+//           {courses.map((course) => (
+//             <tr key={course.id}>
+//               <td>{course.name}</td>
+//               <td>{course.start_date}</td>
+//               <td>{course.end_date}</td>
+//               <td>
+//                 <button onClick={() => handleUpdate(course.id, 'New name', course.start_date, course.end_date)}>
+//                   Update
+//                 </button>
+//                 <button onClick={() => handleDelete(course.id)}>Delete</button>
+//               </td>
+//             </tr>
+//           ))}
+//         </tbody>
+//       </table>
+//     </div>
+//   );
+
+// };
+
+// export default CoursesPage;
+
+import { useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/utils/supabase-client';
+import { v4 as uuidv4 } from 'uuid';
 import Button from '@/components/ui/Button';
 import PageWrapper from '@/lib/pageWrapper';
-import { GetServerSidePropsContext } from 'next';
-import {
-  createServerSupabaseClient,
-  User
-} from '@supabase/auth-helpers-nextjs';
-import CourseDetails from './course/[courseId]';
-import CoursesPage from './addcourse';
-import { userAgent } from 'next/server';
-// import { useUser } from '@supabase/auth-helpers-react';
-
+import Search, { facultyId, studentId } from './test';
 interface Props {
   title: string;
   description?: string;
   footer?: ReactNode;
-  children?: ReactNode;
-}
-// make a component called Popup that will make a popup when the user clicks button, When they click the background the popup will close
-export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const supabase = createServerSupabaseClient(ctx);
-  const {
-    data: { session }
-  } = await supabase.auth.getSession();
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/signin',
-        permanent: false
-      }
-    };
-  }
-  return {
-    props: {
-      initialSession: session,
-      user: session.user
-    }
-  };
-};
-//@ts-ignore
-function Popup({ showPopup, setShowPopup, courseStudents, course_id }) {
-  const handleXButtonClick = () => {
-    setShowPopup(false);
-  };
-
-  return (
-    <div
-      className={`${
-        showPopup ? 'block' : 'hidden'
-      } fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 z-30`}
-    >
-      <div
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2 bg-gray-800 rounded-md shadow-lg"
-        style={{ backgroundColor: 'rgba(0, 0, 0, 0.9)' }}
-      >
-        <div className="p-4">
-          <h1 className="text-xl font-bold mb-2 text-white">Attendance</h1>
-          <p className="text-gray-300">Student List</p>
-          <Card
-            title=""
-            description=""
-            footer={
-              <p>
-                <button className="close-button" onClick={handleXButtonClick}>
-                  Close
-                </button>
-              </p>
-            }
-          >
-            <CoursesTable
-              courseStudents={courseStudents}
-              course_id={course_id}
-            />
-            <p className="text-xl mt-8 mb-4 font-semibold text-white "></p>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                marginTop: '20px'
-              }}
-            ></div>
-          </Card>
-        </div>
-      </div>
-    </div>
-  );
-}
-function CoursesTable({
-  courseStudents,
-  course_id
-}: {
-  courseStudents: any[] | null | undefined;
-  course_id: string;
-}) {
-  function filterStudentsByCourseId(
-    course_id: string,
-    courseStudents: any[] | null | undefined
-  ) {
-    if (!courseStudents) {
-      return [];
-    }
-
-    const filteredStudents = courseStudents.filter((student: any) => {
-      return student.role === 'student' && student.course_id === course_id;
-    });
-    return filteredStudents;
-  }
-
-  const [profiles, setProfiles] = useState<any[]>([]);
-  const [courseSession, setCourseSession] = useState(0);
-
-  useEffect(() => {
-    async function fetchProfiles() {
-      const { data: profiles, error } = await supabase
-        .from('profiles')
-        .select('id, full_name');
-
-      if (error) {
-        console.error(error);
-      } else {
-        setProfiles(profiles);
-      }
-    }
-
-    fetchProfiles();
-  }, []);
-
-  const filteredStudents = filterStudentsByCourseId(course_id, courseStudents);
-
-  return (
-    <>
-      <table
-        style={{
-          margin: 'auto',
-          borderCollapse: 'collapse',
-          border: '2px solid black',
-          backgroundColor: '#E6E6FA',
-          color: 'black',
-          fontSize: '14px'
-        }}
-      >
-        <thead>
-          <tr>
-            <th
-              style={{
-                border: '1px solid purple',
-                padding: '10px',
-                backgroundColor: '#9370DB',
-                color: 'white',
-                fontSize: '14px'
-              }}
-            >
-              Student Name
-            </th>
-            <th
-              style={{
-                border: '1px solid purple',
-                padding: '10px',
-                backgroundColor: '#9370DB',
-                color: 'white',
-                fontSize: '14px'
-              }}
-            >
-              Status
-            </th>
-            <th
-              style={{
-                border: '1px solid purple',
-                padding: '10px',
-                backgroundColor: '#9370DB',
-                color: 'white',
-                fontSize: '14px'
-              }}
-            >
-              Status Update
-            </th>
-          </tr>
-        </thead>
-        {/* body */}
-        <tbody>
-          {filteredStudents.map((student: any) => {
-            const profile = profiles.find((p) => p.id === student.profile_id);
-            const studentName = profile
-              ? profile.full_name
-              : student.profile_id;
-
-            return (
-              <tr key={student.id}>
-                <td
-                  style={{
-                    border: '1px solid purple',
-                    padding: '10px',
-                    fontSize: '14px'
-                  }}
-                >
-                  {studentName}
-                </td>
-                <td
-                  style={{
-                    border: '1px solid purple',
-                    padding: '10px',
-                    fontSize: '14px'
-                  }}
-                >
-                  {student.role}
-                </td>
-                <td
-                  style={{
-                    border: '1px solid purple',
-                    padding: '10px',
-                    fontSize: '14px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    margin: '0 auto'
-                  }}
-                ></td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </>
-  );
+  children: ReactNode;
 }
 
 function Card({ title, description, footer, children }: Props) {
@@ -240,124 +184,294 @@ function Card({ title, description, footer, children }: Props) {
         <p className="text-zinc-300">{description}</p>
         {children}
       </div>
-      <div className="flex justify-center border-t border-zinc-700 bg-zinc-900 p-4 text-zinc-500 rounded-b-md ">
+      <div className="border-t border-zinc-700 bg-zinc-900 p-4 text-zinc-500 rounded-b-md">
         {footer}
       </div>
     </div>
   );
 }
 
-// this will use the user?.id to get the courses from the database table called enrollment
-// and then display them in a list
+function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
+  return (
+    <table
+      style={{
+        margin: 'auto',
+        borderCollapse: 'collapse',
+        border: '2px solid black',
+        backgroundColor: '#E6E6FA',
+        color: 'black',
+        fontSize: '14px'
+      }}
+    >
+      <thead>
+        <tr>
+          <th
+            style={{
+              border: '1px solid purple',
+              padding: '10px',
+              backgroundColor: '#9370DB',
+              color: 'white',
+              fontSize: '14px'
+            }}
+          >
+            Name
+          </th>
+          <th
+            style={{
+              border: '1px solid purple',
+              padding: '10px',
+              backgroundColor: '#9370DB',
+              color: 'white',
+              fontSize: '14px'
+            }}
+          >
+            Start date
+          </th>
+          <th
+            style={{
+              border: '1px solid purple',
+              padding: '10px',
+              backgroundColor: '#9370DB',
+              color: 'white',
+              fontSize: '14px'
+            }}
+          >
+            End date
+          </th>
+          {/* <th style={{ border: '1px solid purple', padding: '10px' }}>
+            Attendance
+          </th> */}
+          {/* <th style={{ border: '1px solid purple', padding: '10px' }}>Students</th> */}
+          <th
+            style={{
+              border: '1px solid purple',
+              padding: '10px',
+              backgroundColor: '#9370DB',
+              color: 'white',
+              fontSize: '14px'
+            }}
+          >
+            Faculty
+          </th>
+          <th
+            style={{
+              border: '1px solid purple',
+              padding: '10px',
+              backgroundColor: '#9370DB',
+              color: 'white',
+              fontSize: '14px'
+            }}
+          >
+            Meeting Pattern
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {/* name text not null,
+    start_date date not null,
+    end_date date not null,
+    attendance jsonb null,
+    students array null,
+    faculty array null,
+    id uuid not null default uuid_generate_v4 (),
+    Meeting Pattern text null default 'M,TU,W,TH,F,SA,SU 12-1 am'::text, */}
+        {courses.map((course: any) => (
+          <tr key={course.id}>
+            <td
+              style={{
+                border: '1px solid purple',
+                padding: '10px',
+                fontSize: '14px'
+              }}
+            >
+              {course.name}
+            </td>
+            <td
+              style={{
+                border: '1px solid purple',
+                padding: '10px',
+                fontSize: '14px'
+              }}
+            >
+              {course.start_date}
+            </td>
+            <td
+              style={{
+                border: '1px solid purple',
+                padding: '10px',
+                fontSize: '14px'
+              }}
+            >
+              {course.end_date}
+            </td>
+            {/* <td style={{ border: '1px solid purple', padding: '10px' }}>
+              {course.attendance}
+            </td> */}
+            {/* <td style={{ border: '1px solid purple', padding: '10px' }}>
+              {course.students}
+            </td> */}
+            <td
+              style={{
+                border: '1px solid purple',
+                padding: '10px',
+                fontSize: '14px'
+              }}
+            >
+              {course.faculty}
+            </td>
+            <td style={{ border: '1px solid purple', padding: '10px' }}>
+              {course.meeting}
+            </td>
+            <td style={{ border: '1px solid purple', padding: '10px' }}></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
 
-export default function FacultyCourses({ user }: { user: User }) {
+const CoursesPage = () => {
+  // i want to make a UUID usinf uuidv4
+  const { v4: uuidv4 } = require('uuid');
+  const id = uuidv4();
   const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [courseName, setCourseName] = useState([]);
-  const [courseStudents, setCourseStudents] = useState([]);
-  const [showPopup, setShowPopup] = useState(false);
-  const [courseId, setCourseId] = useState(0);
+  const [name, setName] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [faculty, setFaculty] = useState('');
+  const [attendance, setAttendance] = useState('');
+  const [students, setStudents] = useState('');
+  const [meetingPattern, setMeetingPattern] = useState('');
+  // const id = uuidv4();
 
   useEffect(() => {
-    const fetchData = async () => {
-      await fetchCourses();
-      await fetchCourseName();
-    };
-    fetchData();
+    fetchCourses();
   }, []);
 
-  // store each course in the database in the courses array
-
-  async function fetchCourses() {
-    // define data as an data type
-
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('enrollment')
-        .select('*')
-        .eq('profile_id', user?.id);
-      if (error) throw error;
-      //@ts-ignore
-      setCourses(data);
-    } catch (error) {
-      //@ts-ignore
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-  // based in the course id, get the students in the course
-  const fetchCourseName = async () => {
+  const fetchCourses = async () => {
     const { data, error } = await supabase.from('courses').select('*');
 
     if (error) {
       console.error(error);
     } else {
-      //@ts-ignore
       setCourses(data);
     }
   };
+  // for each faculty and student in the array insert new row into the enrollment table
+  const handleEnrollment = async (
+    facultyId: any,
+    studentId: any,
+    CourseId: any
+  ) => {
+    facultyId.forEach(async (element: any) => {
+      const { data, error } = await supabase.from('enrollment').insert({
+        course_id: CourseId,
+        profile_id: element,
+        role: 'faculty'
+      });
+      if (error) {
+        console.error(error);
+      }
+    });
+    studentId.forEach(async (element: any) => {
+      const { data, error } = await supabase.from('enrollment').insert({
+        course_id: CourseId,
+        profile_id: element,
+        role: 'student'
+      });
+      if (error) {
+        console.error(error);
+      }
+    });
+  };
+
+  const handleCreate = async (event: any) => {
+    event.preventDefault();
+
+    const { data, error } = await supabase.from('courses').insert({
+      id,
+      name,
+      start_date: startDate,
+      end_date: endDate,
+      faculty: [facultyId],
+      student: [studentId],
+      meeting: meetingPattern
+    });
+
+    if (error) {
+      console.error(error);
+    } else {
+      console.log('Course created:', data);
+      // setCourses([...courses, data[0]]);
+      setName('');
+      setStartDate('');
+      setEndDate('');
+      setFaculty('');
+      setStudents('');
+      setMeetingPattern('');
+      // id = uuidv4();
+    }
+
+    // for each faculty and student in the array insert new row into the enrollment table
+    handleEnrollment(facultyId, studentId, id);
+  };
+
+  const handleUpdate = async (
+    id: any,
+    name: string,
+    startDate: any,
+    endDate: any
+  ) => {
+    const { data, error } = await supabase
+      .from('courses')
+      .update({ name, start_date: startDate, end_date: endDate })
+      .eq('id', id);
+
+    if (error) {
+      console.error(error);
+    } else {
+      console.log('Course updated:', data);
+      const updatedCourses = courses.map((course: any) =>
+        course.id === id
+          ? { ...course, name, start_date: startDate, end_date: endDate }
+          : course
+      );
+      setCourses(updatedCourses);
+    }
+  };
+
+  const handleDelete = async (id: any) => {
+    const { data, error } = await supabase
+      .from('courses')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error(error);
+    } else {
+      console.log('Course deleted:', data);
+      const updatedCourses = courses.filter((course: any) => course.id !== id);
+      setCourses(updatedCourses);
+    }
+  };
+  // for all faculty and students in there array
+  // const addEnrollment = async (courseId: any, studentId: any) => {
 
   return (
     <PageWrapper allowedRoles={['student']}>
-      <div className="flex flex-col items-center justify-center min-h-screen py-2">
-        <div className="max-w-4xl mx-auto">
-          {loading ? (
-            <div className="text-zinc-300">Loading...</div>
-          ) : (
-            <>
-              {error && <div className="text-zinc-300">{error}</div>}
-              {courses.length > 0 && (
-                <table className="w-full table-auto">
-                  <caption className="text-2xl font-bold mb-4">Courses</caption>
-                  <thead>
-                    <tr>
-                      <th className="text-left">Course Name</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {courses.map((course: any) => (
-                      <tr key={course.id}>
-                        <td className="px-4 py-2">{course.name}</td>
-                        <td className="px-4 py-2">
-                          <Button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                            onClick={() => {
-                              setShowPopup(true);
-                              setCourseId(course.id);
-                            }}
-                          >
-                            View more
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </>
-          )}
-          <div className="flex items-center justify-center mt-4 space-x-4">
-            <Button
-              onClick={() => {
-                fetchCourses();
-                fetchCourseName();
-              }}
-            >
-              Refresh Courses
-            </Button>
-            <Popup
-              showPopup={showPopup}
-              setShowPopup={setShowPopup}
-              courseStudents={courseStudents}
-              course_id={courseId}
-            />
-          </div>
+      <>
+        <div>
+          <Card title="Courses" description="List of all courses">
+            {' '}
+            <CoursesTable courses={courses} />{' '}
+          </Card>
         </div>
-      </div>
+      </>
     </PageWrapper>
   );
+};
+
+export default CoursesPage;
+function setfaculty(value: string): void {
+  throw new Error('Function not implemented.');
 }

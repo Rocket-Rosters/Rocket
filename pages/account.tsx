@@ -245,7 +245,7 @@ export default function Account({ user }: { user: User }) {
             Account
           </h1>
           <p className="mt-5 text-xl text-zinc-200 sm:text-2xl max-w-2xl mx-auto text-center">
-            We partnered with Stripe for a simplified billing.
+            🚀 Lets get your account set up 🚀
           </p>
         </div>
       </div>
@@ -267,7 +267,7 @@ export default function Account({ user }: { user: User }) {
         >
           {details &&
             Object.entries(details).map(([key, value]) => {
-              if (key === 'id' || key === 'email') return null;
+              if (key === 'id' || key === 'email' || key === 'role' || key === 'website'|| key === 'avatar_url' || key === 'full_name'  ) return null;
               return (
                 <div key={key} className="flex flex-col mt-4">
                   <label htmlFor={key} className="mb-2 font-medium">
