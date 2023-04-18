@@ -293,7 +293,7 @@ function Popup({ showPopup, setShowPopup, courseStudents, course_id }) {
               }}
             >
               <Button className="center" onClick={handleXButtonClick}>
-                Send Attendence
+                Send Attendance
               </Button>
             </div>
           </Card>
@@ -468,7 +468,7 @@ export default function FacultyCourses({ user }: { user: User }) {
             </div>
           </div>
         </Card>
-        <Card title="Attendence">
+        <Card title="Attendance">
           <div className="flex flex-col items-center justify-center">
             {loading ? (
               <div className="text-zinc-300">Loading...</div>
@@ -490,7 +490,7 @@ export default function FacultyCourses({ user }: { user: User }) {
                   setShowPopup(true);
                 }}
               >
-                Take Attendence
+                Take Attendance
               </Button>
 
               <Popup
