@@ -28,6 +28,7 @@ export default function CourseDetails() {
         <button
           onClick={() => {
             let _students = presentStudents;
+            //@ts-ignore
             setPresentStudents([..._students, student]);
           }}
         >

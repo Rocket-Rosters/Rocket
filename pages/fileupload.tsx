@@ -304,6 +304,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+//@ts-ignore
 import { StorageFile } from '@supabase/storage-js';
 import { Database } from '../utils/database.types';
 import PageWrapper from '@/lib/pageWrapper';

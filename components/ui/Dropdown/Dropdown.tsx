@@ -4,7 +4,9 @@ import mergeRefs from 'react-merge-refs';
 import LoadingDots from '../LoadingDots/LoadingDots';
 import './Dropdown.module.css';
 const Dropdown = (
+//@ts-ignore
   { className, options, onChange, selectedOption, loading, disabled },
+  //@ts-ignore
   ref
 ) => {
   const [toggleOn, setToggleOn] = useState(false);

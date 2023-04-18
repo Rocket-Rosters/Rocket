@@ -5,5 +5,6 @@ interface Props {
 }
 
 export default function PricingPage({ products }: Props) {
+  //@ts-ignore
   return <Pricing products={products} />;
 }

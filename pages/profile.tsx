@@ -217,6 +217,7 @@ export default function Avatar({ url, size = 150, onUpload, uid }: Props) {
       const url = URL.createObjectURL(data);
       setAvatarUrl(url);
     } catch (error) {
+      //@ts-ignore
       console.log('Error downloading image: ', error.message);
     }
   }

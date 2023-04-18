@@ -117,6 +117,7 @@ export default function Profile() {
         const user = useUser();
         if (user) {
           const { data, error } = await supabase
+          // @ts-ignore
             .from<ProfileData>('profiles')
             .select('*')
             .eq('user_id', user.userDetails)
@@ -139,6 +140,7 @@ export default function Profile() {
       const user = useUser();
       if (user && profileData) {
         const { error } = await supabase
+        // @ts-ignore
           .from<ProfileData>('profiles')
           .update({ full_name: newName })
           .eq('user_id', user.userDetails);

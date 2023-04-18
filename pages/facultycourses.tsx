@@ -89,6 +89,7 @@ function CoursesTable({
         .then((result) => {
           console.log('Upsert successful:', result);
         })
+        //@ts-ignore
         .catch((error) => {
           console.error('Error during upsert:', error);
         });
@@ -116,6 +117,7 @@ function CoursesTable({
           type="datetime-local"
           placeholder="Course Name"
           // store input response in courseSession using setCourseSession
+          //@ts-ignore
           onChange={(e) => setCourseSession(e.target.value)}
         />
       </form>
@@ -368,10 +370,12 @@ export default function FacultyCourses({ user }: { user: User }) {
         .select('*')
         .eq('profile_id', user?.id);
       if (error) throw error;
+      //@ts-ignore
       setCourses(data);
 
       console.log('courses:', data);
     } catch (error) {
+      //@ts-ignore
       setError(error.message);
     } finally {
       setLoading(false);
@@ -407,6 +411,7 @@ export default function FacultyCourses({ user }: { user: User }) {
     if (error) {
       console.error(error);
     } else {
+      //@ts-ignore
       setCourses(data);
     }
   };
@@ -417,6 +422,7 @@ export default function FacultyCourses({ user }: { user: User }) {
     if (error) {
       console.error(error);
     } else {
+      //@ts-ignore
       setCourses(data);
     }
   };

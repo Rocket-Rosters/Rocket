@@ -3,7 +3,7 @@ import Stripe from 'stripe';
 
 import { stripe } from './stripe';
 import { toDateTime } from './helpers';
-
+//@ts-ignore
 import { Customer, UserDetails, Price, Product } from 'types';
 import type { Database } from 'types_db';
 

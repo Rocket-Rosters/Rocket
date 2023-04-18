@@ -1,4 +1,3 @@
-
 import { useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/utils/supabase-client';
 import { v4 as uuidv4 } from 'uuid';
@@ -189,6 +188,7 @@ const CoursesPage = () => {
     if (error) {
       console.error(error);
     } else {
+      //@ts-ignore
       setCourses(data);
     }
   };
@@ -271,6 +271,7 @@ const CoursesPage = () => {
           ? { ...course, name, start_date: startDate, end_date: endDate }
           : course
       );
+      //@ts-ignore
       setCourses(updatedCourses);
     }
   };

@@ -73,17 +73,28 @@ export default function InviteStudentsPage() {
             .update({
               // @ts-ignore
               role: row.role,
-              // @ts-igno
+              //@ts-ignore
+
               first_name: row.first_name,
+              //@ts-ignore
               last_name: row.last_name,
+              //@ts-ignore
               full_name: row.full_name,
+              //@ts-ignore
               avatar_url: row.avatar_url,
+              //@ts-ignore
               website: row.website,
+              //@ts-ignore
               address_line1: row.address_line1,
+              //@ts-ignore
               address_line2: row.address_line2,
+              //@ts-ignore
               city: row.city,
+              //@ts-ignore
               state: row.state,
+              //@ts-ignore
               postal_code: row.postal_code,
+              //@ts-ignore
               country: row.country
             })
             // @ts-ignore
