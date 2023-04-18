@@ -158,7 +158,6 @@ function CoursesTable({ courses, handleUpdate, handleDelete }: any) {
             <td style={{ border: '1px solid purple', padding: '10px' }}>
               {course.meeting}
             </td>
-            <td style={{ border: '1px solid purple', padding: '10px' }}></td>
           </tr>
         ))}
       </tbody>
