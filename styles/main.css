@@ -50,3 +50,18 @@ a {
 .height-screen-helper {
   height: calc(100vh - 80px);
 }
+
+/* Set the width of an element to 80% on screens up to 768px wide */
+@media (max-width: 768px) {
+  .width-helper {
+    width: 80%;
+  }
+}
+
+/* Set the width to 90% and height to 30% on screens up to 480px wide */
+@media (max-width: 480px) {
+  .width-helper {
+    width: 90%;
+    height: 30%;
+  }
+}
