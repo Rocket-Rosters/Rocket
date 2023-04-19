@@ -194,7 +194,7 @@ function CoursesTable({
                     fontSize: '14px'
                   }}
                 >
-                  {student.role}
+                  {profile?.status}
                 </td>
                 <td
                   style={{
