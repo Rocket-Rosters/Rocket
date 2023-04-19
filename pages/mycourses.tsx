@@ -1,4 +1,3 @@
-
 import { useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/utils/supabase-client';
 import { v4 as uuidv4 } from 'uuid';
@@ -125,56 +124,56 @@ function CoursesTable({ courses }: any) {
       <tbody>
         {courses.map((course: any) => {
           console.log('course', String(course.faculty[0]));
-            const profile = profiles.find((p) => p.id === String(course.faculty[0]));
-            // const profile = profiles.find((p) => course.faculty.includes(p.id));
-            console.log('profile', profile)
-            const facultyName = profile
-              ? profile.full_name
-              : course.faculty;
-            return (
-          <tr key={course.id}>
-            <td
-              style={{
-                border: '1px solid purple',
-                padding: '10px',
-                fontSize: '14px'
-              }}
-            >
-              {course.name}
-            </td>
-            <td
-              style={{
-                border: '1px solid purple',
-                padding: '10px',
-                fontSize: '14px'
-              }}
-            >
-              {course.start_date}
-            </td>
-            <td
-              style={{
-                border: '1px solid purple',
-                padding: '10px',
-                fontSize: '14px'
-              }}
-            >
-              {course.end_date}
-            </td>
-            <td
-              style={{
-                border: '1px solid purple',
-                padding: '10px',
-                fontSize: '14px'
-              }}
-            >
-              {facultyName}
-            </td>
-            <td style={{ border: '1px solid purple', padding: '10px' }}>
-              {course.meeting}
-            </td>
-          </tr>
-        );
-      })}
+          const profile = profiles.find(
+            (p) => p.id === String(course.faculty[0])
+          );
+          // const profile = profiles.find((p) => course.faculty.includes(p.id));
+          console.log('profile', profile);
+          const facultyName = profile ? profile.full_name : course.faculty;
+          return (
+            <tr key={course.id}>
+              <td
+                style={{
+                  border: '1px solid purple',
+                  padding: '10px',
+                  fontSize: '14px'
+                }}
+              >
+                {course.name}
+              </td>
+              <td
+                style={{
+                  border: '1px solid purple',
+                  padding: '10px',
+                  fontSize: '14px'
+                }}
+              >
+                {course.start_date}
+              </td>
+              <td
+                style={{
+                  border: '1px solid purple',
+                  padding: '10px',
+                  fontSize: '14px'
+                }}
+              >
+                {course.end_date}
+              </td>
+              <td
+                style={{
+                  border: '1px solid purple',
+                  padding: '10px',
+                  fontSize: '14px'
+                }}
+              >
+                {facultyName}
+              </td>
+              <td style={{ border: '1px solid purple', padding: '10px' }}>
+                {course.meeting}
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
